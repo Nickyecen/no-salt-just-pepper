@@ -16,27 +16,24 @@ public class Tuple<T1, T2> {
 	private final T1 first;
 	private final T2 second;
 
-	// Constructors
 	/**
-	 * Constructs a tuple with two elements.
+	 * Constructs a Tuple with two elements.
 	 * 
-	 * @param first
-	 * @param second
+	 * @param first the first element of the Tuple
+	 * @param second the second element of the Tuple
 	 * 
 	 * @author nickyecen
 	 */
 	public Tuple(T1 first, T2 second) {
+		// Sets attributes
 		this.first = first;
 		this.second = second;
-	}
-	
-	// Methods
-		// Getters
+	}	
 	
 	/**
-	 * Gets the first element of the tuple
+	 * Gets the first element of the Tuple
 	 * 
-	 * @return the first element of the tuple
+	 * @return the first element of the Tuple
 	 * 
 	 * @author nickyecen
 	 */
@@ -45,9 +42,9 @@ public class Tuple<T1, T2> {
 	}
 	
 	/**
-	 * Gets the second element of the tuple
+	 * Gets the second element of the Tuple
 	 * 
-	 * @return the second element of the tuple
+	 * @return the second element of the Tuple
 	 * 
 	 * @author nickyecen
 	 */
@@ -55,7 +52,6 @@ public class Tuple<T1, T2> {
 		return second;
 	}
 
-		// Default Overwrites
 	/**
 	 * Checks if this tuple is equal to a given object
 	 * Overrides {@link Object#equals(Object)}
@@ -63,16 +59,18 @@ public class Tuple<T1, T2> {
 	 * @author nickyecen
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if(this == obj) return true;
+	public boolean equals(Object obj) { 
+		if(this == obj) return true;		
 		if(obj == null || getClass() != obj.getClass()) return false;
+	
+		// Checks if both Tuples have the same Objects 
 		Tuple<?, ?> tuple = (Tuple<?, ?>) obj;
 		return Objects.equals(first, tuple.first) &&
 			   Objects.equals(second, tuple.second);
 	}
 
 	/**
-	 * Returns a hash code for the tuple
+	 * Returns a hash code for the Tuple
 	 * Overrides {@link Object#hashCode()}
 	 * 
 	 * @author nickyecen
@@ -83,7 +81,7 @@ public class Tuple<T1, T2> {
 	}
 
 	/**
-	 * Returns a string representation of the tuple in the format (first, second).
+	 * Returns a {@link java.lang.String} representation of the tuple in the format (first, second).
 	 * Overrides {@link Object#toString()}
 	 * 
 	 * @author nickyecen

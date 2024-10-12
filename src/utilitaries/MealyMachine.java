@@ -7,10 +7,14 @@ import java.util.HashMap;
  * 
  * @param <K> the key to be used to hash the the next state
  * 
+ * @see utilitaries.Command
+ * 
  * @author nickyecen
+ * @author 
  */
 public class MealyMachine<K> {
 
+	// TODO: Create method
 	/**
 	 * Constructs the Mealy state machine for execution
 	 * 
@@ -20,9 +24,10 @@ public class MealyMachine<K> {
 	 * @author 
 	 */
 	public MealyMachine(String initialState, HashMap<String, HashMap<K, Tuple<String, Command>>> stateMap) {
-		
+		// TODO
 	}
 
+	// TODO: Create method
 	/**
 	 * Runs the Mealy Machine using the stateMap with a given input
 	 * 
@@ -31,6 +36,6 @@ public class MealyMachine<K> {
 	 * @author 
 	 */
 	public void run(String input) {
-		
+		// TODO
 	}
 }
