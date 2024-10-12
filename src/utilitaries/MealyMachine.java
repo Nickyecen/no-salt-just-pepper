@@ -5,9 +5,7 @@ import java.util.HashMap;
 /**
  * A Mealy state machine that will read through a state machine and execute outputs in its transitions
  * 
- * @param <K> the key to be used to hash the the next state
- * 
- * @see utilitaries.Command
+ * @param <K> the key to be used to hash the the next state 
  * 
  * @author nickyecen
  * @author 
