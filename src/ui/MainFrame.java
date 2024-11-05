@@ -2,9 +2,12 @@ package ui;
 
 import java.awt.*;
 import javax.swing.*;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 public class MainFrame extends JFrame {
     public MainFrame() {
+    	FlatMacLightLaf.setup();
+    	
         setTitle("Gerador de Música por Texto");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800, 600);
