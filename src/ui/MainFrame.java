@@ -1,12 +1,19 @@
 package ui;
 
-import java.awt.*;
-import javax.swing.*;
-import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 
 public class MainFrame extends JFrame {
     public MainFrame() {
-    	FlatMacLightLaf.setup();
     	
         setTitle("Gerador de Música por Texto");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
