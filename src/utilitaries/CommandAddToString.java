@@ -15,8 +15,6 @@ public class CommandAddToString implements Command {
 	 * 
 	 * @param str the string that will be edited
 	 * @param value the character that will be added to the string
-	 * 
-	 * @author nickyecen
 	 */
 	public CommandAddToString(StringBuilder str, char value) {
 		this.str = str;
@@ -25,8 +23,6 @@ public class CommandAddToString implements Command {
 	
 	/**
 	 * Executes the addition of the character to the string
-	 * 
-	 * @author nickyecen
 	 */
 	@Override
 	public void execute() {

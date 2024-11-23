@@ -3,8 +3,8 @@ package music;
 /**
  * Class of a music player that can play notes using JFugue
  * 
- * @author nickyecen
  * @author 
+ * @author nickyecen
  */
 public class MusicPlayer {
 
@@ -24,9 +24,6 @@ public class MusicPlayer {
 	 * @param volume the volume of how loud the {@link music.Note} will be
 	 * @param instrument the {@link music.Instrument} that the {@link music.Note} will use
 	 * @param octave the octave in which each {@link music.Note} will be played
-	 * 
-	 * @author nickyecen
-	 * @author
 	 */
 	private MusicPlayer(double volume, Instrument instrument, int octave) {
 		this.setVolume(volume);
@@ -38,9 +35,6 @@ public class MusicPlayer {
 	 * A builder class for {@link music.MusicPlayer} to be built for better readability
 	 * 
 	 * @see music.MusicPlayer
-	 * 
-	 * @author nickyecen
-	 * @author
 	 */
 	public class Builder {
 		private double volume;
@@ -49,8 +43,6 @@ public class MusicPlayer {
 	
 		/**
 		 * Constructs the builder with default values for the {@link music.MusicPlayer}
-		 * 
-		 * @author nickyecen
 		 */
 		public Builder() {
 			this.volume = MusicPlayer.MAX_VOLUME;
@@ -64,9 +56,6 @@ public class MusicPlayer {
 		 * 
 		 * @param volume the new volume value
 		 * @return the builder with the updated value
-		 * 
-		 * @author nickyecen
-		 * @author
 		 */
 		public Builder volume(double volume) {
 			this.volume = volume; // Make attribution more robust (private setter?)
@@ -78,8 +67,6 @@ public class MusicPlayer {
 		 * 
 		 * @param instrument the new {@link music.Instrument} that will be used
 		 * @return the builder with the updated {@link music.Instrument}
-		 * 
-		 * @author nickyecen
 		 */
 		public Builder instrument(Instrument instrument) {
 			this.instrument = instrument;
@@ -92,9 +79,6 @@ public class MusicPlayer {
 		 * 
 		 * @param octave the new octave that will be used
 		 * @return the builder with the updated octave 
-		 * 
-		 * @author nickyecen
-		 * @author 
 		 */
 		public Builder octave(int octave) {
 			this.octave = octave; // Make attribution more robust (private setter?)
@@ -105,8 +89,6 @@ public class MusicPlayer {
 		 * Builds the MusicPlayer created with the builder
 		 * 
 		 * @return the MusicPlayer built
-		 * 
-		 * @author nickyecen
 		 */
 		MusicPlayer build() {
 			return new MusicPlayer(volume, instrument, octave);
@@ -118,8 +100,6 @@ public class MusicPlayer {
 	 * Changes the MusicPlayer's {@link music.Instrument} to the provided {@link music.Instrument}
 	 * 
 	 * @param instrument the {@link music.Instrument} to change the MusicPlayer's {@link music.Instrument} to
-	 * 
-	 * @author
 	 */
 	public void changeInstrumentTo(Instrument instrument) {
 		// TODO
@@ -129,8 +109,6 @@ public class MusicPlayer {
 	 * Changes the MusicPlayer's {@link music.Instrument} to the {@link music.Instrument} of the provided midi code.
 	 * 
 	 * @param midiCode the midi code of the {@link music.Instrument} to change the MusicPlayer's {@link music.Instrument} to
-	 * 
-	 * @author nickyecen
 	 */
 	public void changeInstrumentTo(int midiCode) {
 		changeInstrumentTo(Instrument.fromMidiCode(midiCode));
@@ -141,8 +119,6 @@ public class MusicPlayer {
 	 * Plays the note provided
 	 * 
 	 * @param note the note to be played
-	 * 
-	 * @author
 	 */
 	public void playNote(Note note) {
 		// TODO
@@ -152,8 +128,6 @@ public class MusicPlayer {
 	 * Gets the volume of the MusicPlayer
 	 * 
 	 * @return the volume of the MusicPlayer
-	 * 
-	 * @author nickyecen
 	 */
 	public double getVolume() {
 		return volume;
@@ -164,9 +138,6 @@ public class MusicPlayer {
 	 * Sets the volume of the MusicPlayer
 	 * 
 	 * @param volume the volume to be set
-	 * 
-	 * @author nickyecen
-	 * @author 
 	 */
 	public void setVolume(double volume) {
 		this.volume = volume; // Make attribution more robust
@@ -176,8 +147,6 @@ public class MusicPlayer {
 	 * Gets the octave of the MusicPlayer
 	 * 
 	 * @return the octave of the MusicPlayer
-	 * 
-	 * @author nickyecen
 	 */
 	public int getOctave() {
 		return octave;
@@ -188,9 +157,6 @@ public class MusicPlayer {
 	 * Sets the octave of the MusicPlayer
 	 * 
 	 * @param octave the octave to be set
-	 * 
-	 * @author nickyecen
-	 * @author 
 	 */
 	public void setOctave(int octave) {
 		this.octave = octave; // Make attribution more robust
@@ -200,8 +166,6 @@ public class MusicPlayer {
 	 * Gets the {@link music.Instrument} of the MusicPlayer
 	 * 
 	 * @return the {@link music.Instrument} of the MusicPlayer
-	 * 
-	 * @author nickyecen
 	 */
 	public Instrument getInstrument() {
 		return instrument;

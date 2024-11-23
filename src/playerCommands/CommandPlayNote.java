@@ -17,8 +17,6 @@ public class CommandPlayNote extends CommandPlayer {
 	 * Constructs a {@link utilitaries.Command} that can play a {@link music.Note} in a {@link music.MusicPlayer}
 	 * 
 	 * @param player the {@link music.MusicPlayer} that will play the {@link music.Note} 
-	 * 
-	 * @author nickyecen
 	 */
 	public CommandPlayNote(MusicPlayer player, Note note) {
 		super(player);
@@ -27,8 +25,6 @@ public class CommandPlayNote extends CommandPlayer {
 
 	/**
 	 * Executes the playing of a {@link music.Note} from the {@link music.MusicPlayer}
-	 * 
-	 * @author nickyecen
 	 */
 	@Override
 	public void execute() {

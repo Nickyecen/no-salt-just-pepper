@@ -21,8 +21,6 @@ public class Tuple<T1, T2> {
 	 * 
 	 * @param first the first element of the Tuple
 	 * @param second the second element of the Tuple
-	 * 
-	 * @author nickyecen
 	 */
 	public Tuple(T1 first, T2 second) {
 		// Sets attributes
@@ -34,8 +32,6 @@ public class Tuple<T1, T2> {
 	 * Gets the first element of the Tuple
 	 * 
 	 * @return the first element of the Tuple
-	 * 
-	 * @author nickyecen
 	 */
 	public T1 getFirst() {
 		return first;
@@ -45,8 +41,6 @@ public class Tuple<T1, T2> {
 	 * Gets the second element of the Tuple
 	 * 
 	 * @return the second element of the Tuple
-	 * 
-	 * @author nickyecen
 	 */
 	public T2 getSecond() {
 		return second;
@@ -55,8 +49,6 @@ public class Tuple<T1, T2> {
 	/**
 	 * Checks if this tuple is equal to a given object
 	 * Overrides {@link Object#equals(Object)}
-	 * 
-	 * @author nickyecen
 	 */
 	@Override
 	public boolean equals(Object obj) { 
@@ -72,8 +64,6 @@ public class Tuple<T1, T2> {
 	/**
 	 * Returns a hash code for the Tuple
 	 * Overrides {@link Object#hashCode()}
-	 * 
-	 * @author nickyecen
 	 */
 	@Override
 	public int hashCode() {
@@ -83,8 +73,6 @@ public class Tuple<T1, T2> {
 	/**
 	 * Returns a {@link java.lang.String} representation of the tuple in the format (first, second).
 	 * Overrides {@link Object#toString()}
-	 * 
-	 * @author nickyecen
 	 */
 	@Override
 	public String toString() {

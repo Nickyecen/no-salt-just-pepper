@@ -14,8 +14,6 @@ public class CommandRaiseOctave extends CommandPlayer {
 	 * Constructs a {@link utilitaries.Command} that can raise an octave of a {@link music.MusicPlayer}
 	 * 
 	 * @param player the {@link music.MusicPlayer} that will have an octave raised 
-	 * 
-	 * @author nickyecen
 	 */
 	public CommandRaiseOctave(MusicPlayer player) {
 		super(player);
@@ -23,8 +21,6 @@ public class CommandRaiseOctave extends CommandPlayer {
 
 	/**
 	 * Executes the octave raising in the {@link music.MusicPlayer}
-	 * 
-	 * @author nickyecen
 	 */
 	@Override
 	public void execute() {

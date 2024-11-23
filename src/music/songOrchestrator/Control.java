@@ -5,43 +5,100 @@ import utilitaries.MealyMachine;
 /**
  * Class that will directly control the {@link utilitaries.MealyMachine} responsible for
  * playing the song
+ * 
+ * @author nickyecen
  */
-public class Control {
+public class Control implements Runnable {
+	
+	final private int MILISECS_IN_MINUTE = 60000;
 
 	private MealyMachine composition;
 	private int bpm = 60;
+	private int milisecsPerBeat = MILISECS_IN_MINUTE / bpm;
 	private Status status = Status.STOPPED;
-	private boolean running = false;
 	
-	private Thread track;
+	private Thread thread;
 	
 	/**
 	 * Constructs the Control with the composition it will play
 	 * 
 	 * @param composition
-	 * 
-	 * @author nickyecen
 	 */
 	public Control(MealyMachine composition) {
 		this.composition = composition;
-		track = new Thread();
 	}
 	
 	/**
 	 * Runs the {@link utilitaries.MealyMachine} to play the song
-	 * 
-	 * @author nickyecen
 	 */
 	public void run() {
-		// TODO
+		setStatus(Status.PLAYING);
+
+		boolean shouldContinue = composition.nextState() && getStatus() != Status.STOPPED;
+		while(shouldContinue) {
+			
+			try {
+				Thread.sleep(milisecsPerBeat);
+			} catch (InterruptedException e) {
+				break;
+			}
+			
+			if(getStatus() == Status.PAUSED) {
+				
+				synchronized (this) {
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						break;
+					}
+				}
+				
+			} else if(getStatus() == Status.STOPPED) {				
+				break;				
+			} else if(getStatus() != Status.PLAYING) {
+
+				stopOperations();
+				throw new IllegalStateException("MealyMachine Control in unexpected state: " + getStatus());
+				
+			}
+			
+			shouldContinue = getStatus() != Status.STOPPED && composition.nextState();
+			
+		}
+		
+		stopOperations();
+	}
+
+	/**
+	 * Starts the song playing
+	 */
+	public void start() {
+		if(getStatus() == Status.PAUSED) {
+			synchronized (this) {
+				setStatus(Status.PLAYING);
+				notify();
+			}
+		} else if(getStatus() == Status.STOPPED) {
+			setStatus(Status.PLAYING);
+			thread = new Thread(this);
+			thread.start();
+		}
+		
+	}
+	
+	/**
+	 * Default actions for when the machine needs to stop its operations for one reason or another
+	 */
+	private void stopOperations() {
+		setStatus(Status.STOPPED);
+		composition.reset();
+		Thread.currentThread().interrupt();
 	}
 
 	/**
 	 * Gets the {@link utilitaries.MealyMachine} composition
 	 * 
 	 * @return the Control's composition
-	 * 
-	 * @author nickyecen
 	 */
 	public MealyMachine getComposition() {
 		return composition;
@@ -51,8 +108,6 @@ public class Control {
 	 * Sets the {@link utilitaries.MealyMachine} composition 
 	 * 
 	 * @param composition the new composition
-	 * 
-	 * @author nickyecen
 	 */
 	public void setComposition(MealyMachine composition) {
 		this.composition = composition;
@@ -62,8 +117,6 @@ public class Control {
 	 * Gets the Control's bpm
 	 * 
 	 * @return the Control's bpm
-	 * 
-	 * @author nickyecen
 	 */
 	public int getBpm() {
 		return bpm;
@@ -73,19 +126,16 @@ public class Control {
 	 * Sets the new Control bpm
 	 * 
 	 * @param bpm the new bpm
-	 * 
-	 * @author nickyecen
 	 */
 	public void setBpm(int bpm) {
 		this.bpm = bpm;
+		this.milisecsPerBeat = MILISECS_IN_MINUTE / bpm;
 	}
 
 	/**
 	 * Gets the {@link Status} of the Control
 	 * 
 	 * @return the current Control status
-	 * 
-	 * @author nickyecen
 	 */
 	public Status getStatus() {
 		return status;
@@ -95,22 +145,9 @@ public class Control {
 	 * Sets the Control {@link Status}
 	 * 
 	 * @param status the new {@link Status}
-	 * 
-	 * @author nickyecen
 	 */
 	public void setStatus(Status status) {
 		this.status = status;
 	}
 
-	/**
-	 * Checks if the {@link utilitaries.MealyMachine} is still running
-	 * 
-	 * @return true if the {@link utilitaries.MealyMachine} is still running
-	 * 
-	 * @author nickyecen
-	 */
-	public boolean isRunning() {
-		return running;
-	}
-	
 }

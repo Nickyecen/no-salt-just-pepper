@@ -16,8 +16,6 @@ public class Orchestrator {
 	 * Constructs the Orchestrator with the composition it will guide
 	 * 
 	 * @param composition
-	 * 
-	 * @author nickyecen
 	 */
 	public Orchestrator(MealyMachine composition) {
 		this.control = new Control(composition);
@@ -25,29 +23,25 @@ public class Orchestrator {
 
 	/**
 	 * Starts playing the composition
-	 * 
-	 * @author nickyecen
 	 */
-	void play() {
-		control.setStatus(Status.PLAYING);
-		if(!control.isRunning()) control.run();
+	public void play() {
+		if(control.getStatus() == Status.STOPPED) {
+			control.getComposition().setEntry(midiSong);
+		}
+		control.start();
 	}
 	
 	/**
 	 * Pauses the playing of the composition
-	 * 
-	 * @author nickyecen
 	 */
-	void pause() {
-		control.setStatus(Status.PAUSED);
+	public void pause() {
+		if(control.getStatus() != Status.STOPPED) control.setStatus(Status.PAUSED);
 	}
 	
 	/**
 	 * Stops the playing of the composition
-	 * 
-	 * @author nickyecen
 	 */
-	void stop() {
+	public void stop() {
 		control.setStatus(Status.STOPPED);
 	}
 	
@@ -55,8 +49,6 @@ public class Orchestrator {
 	 * Gets the midi song being orchestrated
 	 * 
 	 * @return the midi song being orchestrated
-	 * 
-	 * @author nickyecen
 	 */
 	public String getMidiSong() {
 		return midiSong;
@@ -66,8 +58,6 @@ public class Orchestrator {
 	 * Sets the midi song being orchestrated
 	 * 
 	 * @param midiSong the new midi song
-	 * 
-	 * @author nickyecen
 	 */
 	public void setMidiSong(String midiSong) {
 		this.midiSong = midiSong;
@@ -78,8 +68,6 @@ public class Orchestrator {
 	 * Gets the control being used
 	 * 
 	 * @return the control
-	 * 
-	 * @author nickyecen
 	 */
 	public Control getControl() {
 		return control;

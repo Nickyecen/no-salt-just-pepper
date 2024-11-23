@@ -14,8 +14,6 @@ public class CommandDoubleVolume extends CommandPlayer {
 	 * Constructs a {@link utilitaries.Command} that can double the volume of a {@link music.MusicPlayer}
 	 * 
 	 * @param player the {@link music.MusicPlayer} that will have its volume doubled
-	 * 
-	 * @author nickyecen
 	 */
 	public CommandDoubleVolume(MusicPlayer player) {
 		super(player);
@@ -23,8 +21,6 @@ public class CommandDoubleVolume extends CommandPlayer {
 
 	/**
 	 * Executes the volume doubling of the {@link music.MusicPlayer} 
-	 * 
-	 * @author nickyecen
 	 */
 	@Override
 	public void execute() {

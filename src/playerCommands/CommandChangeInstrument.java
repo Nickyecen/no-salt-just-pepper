@@ -19,8 +19,6 @@ public class CommandChangeInstrument extends CommandPlayer {
 	 * 
 	 * @param player the {@link music.MusicPlayer} that will have its {@link music.Instrument} changed
 	 * @param instrument the {@link music.Instrument} that will be changed to
-	 * 
-	 * @author nickyecen
 	 */
 	public CommandChangeInstrument(MusicPlayer player, Instrument instrument) {
 		super(player);
@@ -32,8 +30,6 @@ public class CommandChangeInstrument extends CommandPlayer {
 	 * 
 	 * @param player the {@link music.MusicPlayer} that will have its {@link music.Instrument} changed
 	 * @param nextInstrument the number that the current {@link music.Instrument} will have added to to get the new instrument
-	 * 
-	 * @author nickyecen
 	 */
 	public CommandChangeInstrument(MusicPlayer player, int instrumentIncrement) {
 		super(player);
@@ -42,8 +38,6 @@ public class CommandChangeInstrument extends CommandPlayer {
 
 	/**
 	 * Executes the {@link music.Instrument} change of the {@link music.MusicPlayer} 
-	 * 
-	 * @author nickyecen
 	 */
 	@Override
 	public void execute() {
