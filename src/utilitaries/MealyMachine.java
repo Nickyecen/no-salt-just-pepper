@@ -5,12 +5,18 @@ import java.util.HashMap;
 /**
  * A Mealy state machine that will read through a state machine and execute outputs in its transitions
  * 
- * @param <K> the key to be used to hash the the next state 
- * 
  * @author nickyecen
  * @author 
  */
-public class MealyMachine<K> {
+public class MealyMachine {
+	
+	private String entry;
+	
+	private int entryPosition;
+	private String currentState;
+	private String initialState;
+	
+	private final HashMap<String, HashMap<Character, Tuple<String, Command>>> stateMap;
 
 	// TODO: Create method
 	/**
@@ -19,9 +25,12 @@ public class MealyMachine<K> {
 	 * @param initialState the state in which the machine will start execution
 	 * @param stateMap the state map that the machine will go through to execute
 	 * 
-	 * @author 
+	 * @author nickyecen
+	 * @author
 	 */
-	public MealyMachine(String initialState, HashMap<String, HashMap<K, Tuple<String, Command>>> stateMap) {
+	public MealyMachine(String initialState, HashMap<String, HashMap<Character, Tuple<String, Command>>> stateMap) {
+		this.initialState = initialState;
+		this.stateMap = stateMap;
 		// TODO
 	}
 
@@ -35,5 +44,58 @@ public class MealyMachine<K> {
 	 */
 	public void run(String input) {
 		// TODO
+	}
+	
+	/**
+	 * Runs the Mealy Machine using the stateMap
+	 * 
+	 * @author 
+	 */
+	public void run() {
+		// TODO
+	}
+	
+	/**
+	 * Resets the MealyMachine to the start of the execution
+	 * 
+	 * @author nickyecen
+	 */
+	public void reset() {
+		this.entryPosition = 0;
+		this.currentState = initialState;
+	}
+	
+	/**
+	 * Goes to the next state in execution until it is finished executing
+	 * 
+	 * @return true if there is a nextState to be played
+	 */
+	public boolean nextState() {
+		boolean isThereNextState = false;
+		// TODO
+		return isThereNextState;
+	}
+
+	/**
+	 * Gets the entry being read
+	 * 
+	 * @return the entry being read
+	 * 
+	 * @author nickyecen
+	 */
+	public String getEntry() {
+		return entry;
+	}
+
+	/**
+	 * Sets the entry being read
+	 * 
+	 * @param entry the new entry to be read
+	 * 
+	 * @author nickyecen
+	 */
+	public void setEntry(String entry) {
+		this.entry = entry;
+		reset();
 	}
 }

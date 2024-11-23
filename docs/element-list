@@ -1,5 +1,6 @@
-module:TrabalhoTCP
 main
 music
+music.songOrchestrator
 playerCommands
+ui
 utilitaries

@@ -1,1 +1,1 @@
-moduleSearchIndex = [{"l":"TrabalhoTCP"}];updateSearchResults();
+moduleSearchIndex = [];updateSearchResults();

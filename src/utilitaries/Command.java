@@ -8,8 +8,6 @@ package utilitaries;
 public interface Command {
 	/**
 	 * Generic function execution
-	 * 
-	 * @author nickyecen
 	 */
 	public void execute();
 }
