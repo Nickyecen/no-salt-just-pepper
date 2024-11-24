@@ -2,101 +2,229 @@ package ui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 
+@SuppressWarnings("serial")
 public class MainFrame extends JFrame {
-    public MainFrame() {
-    	
-        setTitle("Gerador de Música por Texto");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(800, 600);
+	
+	final private String WINDOW_TITLE = "No Salt Just Pepper";
+	final private int DEFAULT_WINDOW_WIDTH = 800;
+	final private int DEFAULT_WINDOW_HEIGHT = 600;
+	
+	final private String BPM_LABEL = "BPM:";
+	final private String INSTRUMENT_LABEL = "Current Instrument:";
+	final private String NOTE_LABEL = "Current Note:";
+	
+	final private String FILE_MENU_LABEL = "File";
+	final private String SAVE_MIDI_MENU_ITEM_LABEL = "Save MIDI";
+	
+	private GridBagLayout layout;
+	
+	private JMenuBar menuBar;
+	private JMenu fileMenu;
+	private JMenuItem saveMidiMenuItem;
+	
+	private TextArea textArea;
+	private JButton playButton;
+	private JButton stopButton;
+	private SpinnerRow bpmRow;
+	private TextRow instrumentRow;
+	private TextRow noteRow;
+	
+	private class TextArea extends JScrollPane {
+		
+		private JTextArea textArea;
+		
+		private TextArea() {
+			this.textArea = new JTextArea();
+			this.textArea.setLineWrap(true);
+			this.textArea.setWrapStyleWord(true);
+			super.setViewportView(this.textArea);
+		}
+	}
+	
+	private class SpinnerRow extends JPanel {
+		
+		private JLabel bpmLabel;
+		private JSpinner bpmSpinner;
 
-        // Layout
-        setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        
-        // Text Area
+		private SpinnerRow(String label) {
+			GridLayout layout = new GridLayout(1, 2);
+			super.setLayout(layout);
+			
+			this.bpmLabel = new JLabel(label);
+			super.add(this.bpmLabel);
+			
+			this.bpmSpinner = new JSpinner();
+			super.add(this.bpmSpinner);
+		}
+	}
+	
+	private class TextRow extends JPanel {
+		
+		private JLabel label;
+		private JLabel info;
+
+		private TextRow(String label, String info) {
+			GridLayout layout = new GridLayout(1, 2);
+			super.setLayout(layout);
+			
+			this.label = new JLabel(label);
+			super.add(this.label);
+			
+			this.info = new JLabel(info);
+			super.add(this.info);
+		}
+	}
+	
+	private GridBagConstraints textAreaConstraints() {
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
         c.gridx = 0;
     	c.gridy = 0;
     	c.gridwidth = 4;
     	c.gridheight = 1;
     	c.weighty = 1.0;
-    	c.weightx = 1;
+    	c.weightx = 1.0;
     	c.fill = GridBagConstraints.BOTH;
     	c.insets = new Insets(10, 10, 10, 10);
-    	JTextArea textArea = new JTextArea();
-    	textArea.setLineWrap(true);
-    	textArea.setWrapStyleWord(true);
-    	JScrollPane scrollPane = new JScrollPane(textArea);
-    	add(scrollPane, c);
     	
-    	// Play Button
-        ImageIcon icon = new ImageIcon(getClass().getResource("/res/play_icon.png"));
-        c.gridx = 0;
-    	c.gridy = 1;
+    	return c;
+	}
+	
+	private GridBagConstraints playButtonConstraints() {
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
+	    c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 1;
+		c.gridheight = 3;
+		c.weighty = 0.0;
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.BOTH;
+		c.insets = new Insets(0, 10, 10, 10);
+		
+		return c;
+	}
+	
+	private GridBagConstraints stopButtonConstraints() {
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.gridx = 1;
+	    c.gridy = 1;
     	c.gridwidth = 1;
     	c.gridheight = 3;
     	c.weighty = 0.0;
     	c.weightx = 1.0;
+    	c.fill = GridBagConstraints.BOTH;
+    	c.insets = new Insets(0, 0, 10, 0);
+    	
+    	return c;
+	}
+	
+	private GridBagConstraints bpmRowConstraints() {
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.gridx = 2;
+	    c.gridy = 1;
+    	c.gridwidth = 1;
+    	c.gridheight = 1;
+    	c.weighty = 0.0;
+    	c.weightx = 1.0;
+    	c.fill = GridBagConstraints.BOTH;
     	c.insets = new Insets(0, 10, 10, 10);
-	    add(new JButton(icon), c);
+    	
+    	return c;
+	}
+
+	private GridBagConstraints instrumentRowConstraints() {
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.gridx = 2;
+	    c.gridy = 2;
+    	c.gridwidth = 1;
+    	c.gridheight = 1;
+    	c.weighty = 0.0;
+    	c.weightx = 1.0;
+    	c.fill = GridBagConstraints.BOTH;
+    	c.insets = new Insets(0, 10, 10, 10);
+    	
+    	return c;
+	}
+	
+	private GridBagConstraints noteRowConstraints() {
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.gridx = 2;
+	    c.gridy = 3;
+    	c.gridwidth = 1;
+    	c.gridheight = 1;
+    	c.weighty = 0.0;
+    	c.weightx = 1.0;
+    	c.fill = GridBagConstraints.BOTH;
+    	c.insets = new Insets(0, 10, 10, 10);
+    	
+    	return c;
+	}
+	
+    public MainFrame() {
+    	
+        setTitle(WINDOW_TITLE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+        
+        this.layout = new GridBagLayout();
+        setLayout(layout);
+        
+        this.menuBar = new JMenuBar();
+        setJMenuBar(this.menuBar);
+		this.fileMenu = new JMenu(FILE_MENU_LABEL);
+		this.fileMenu.setMnemonic(KeyEvent.VK_F);
+		this.menuBar.add(fileMenu);
+		this.saveMidiMenuItem = new JMenuItem(SAVE_MIDI_MENU_ITEM_LABEL);
+		this.saveMidiMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+		this.fileMenu.add(saveMidiMenuItem);
+
+    	this.textArea = new TextArea();
+    	add(this.textArea, textAreaConstraints());
+    	
+    	ImageIcon icon = new ImageIcon(getClass().getResource("/res/play_icon.png"));
+    	this.playButton = new JButton(icon);
+	    add(this.playButton, playButtonConstraints());
 	    
-	    // Stop Button
 	    icon = new ImageIcon(getClass().getResource("/res/stop_icon.png"));
-	    c.gridx = 1;
-	    c.gridy = 1;
-	    c.insets = new Insets(0, 0, 10, 0);
-	    add(new JButton(icon), c);
+	    this.stopButton = new JButton(icon);
+	    add(this.stopButton, stopButtonConstraints());
 	    
-	    // BPM Spinner
-	    c.gridx = 2;
-	    c.gridy = 1;
-	    c.gridheight = 1;
-	    c.fill = GridBagConstraints.VERTICAL;
-	    c.anchor = GridBagConstraints.LINE_END;
-	    c.insets = new Insets(0, 10, 10, 5);
-	    add(new JLabel("BPM:"), c);
-	    c.gridx = 3;
-	    c.gridy = 1;
-	    c.fill = GridBagConstraints.BOTH;
-	    c.anchor = GridBagConstraints.LINE_START;
-	    c.insets = new Insets(0, 0, 10, 10);
-	    add(new JSpinner(), c);
+	    this.bpmRow = new SpinnerRow(BPM_LABEL);
+	    add(this.bpmRow, bpmRowConstraints());
 	    
-	    // Instrument information
-	    c.gridx = 2;
-	    c.gridy = 2;
-	    c.fill = GridBagConstraints.VERTICAL;
-	    c.anchor = GridBagConstraints.LINE_END;
-	    c.insets = new Insets(0, 10, 10, 5);
-	    add(new JLabel("Current Instrument:"), c);
-	    c.gridx = 3;
-	    c.gridy = 2;
-	    c.fill = GridBagConstraints.VERTICAL;
-	    c.anchor = GridBagConstraints.LINE_START;
-	    c.insets = new Insets(0, 0, 10, 10);
-	    add(new JLabel("Helicopter (126)"), c);
+	    this.instrumentRow = new TextRow(INSTRUMENT_LABEL, "Helicopter (126)");
+	    add(this.instrumentRow, instrumentRowConstraints());
 	    
-	    // Note information
-	    c.gridx = 2;
-	    c.gridy = 3;
-	    c.fill = GridBagConstraints.VERTICAL;
-	    c.anchor = GridBagConstraints.LINE_END;
-	    c.insets = new Insets(0, 10, 10, 5);
-	    add(new JLabel("Current Note:"), c);
-	    c.gridx = 3;
-	    c.gridy = 3;
-	    c.fill = GridBagConstraints.VERTICAL;
-	    c.anchor = GridBagConstraints.LINE_START;
-	    c.insets = new Insets(0, 0, 10, 10);
-	    add(new JLabel("A4"), c);
+	    this.noteRow = new TextRow(NOTE_LABEL, "A4");
+	    add(this.noteRow, noteRowConstraints());
     }
 }
