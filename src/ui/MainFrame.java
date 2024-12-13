@@ -379,7 +379,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
                 	this.textArea.clear();
                 	String line = null;
             	    while ((line = reader.readLine()) != null) {
-            	    	this.textArea.append(line);
+            	    	this.textArea.append(line + "\n");
             	    }
 				} catch (IOException e1) {
 					e1.printStackTrace();
