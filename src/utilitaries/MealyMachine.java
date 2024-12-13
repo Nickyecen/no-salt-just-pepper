@@ -11,6 +11,7 @@ import java.util.HashMap;
 public class MealyMachine {
 	
 	private String entry;
+	private int entryLength;
 	
 	private int entryPosition = 0;
 	private String currentState;
@@ -27,6 +28,7 @@ public class MealyMachine {
 	 */
 	public MealyMachine(String initialState, HashMap<String, HashMap<Character, Tuple<String, Command>>> stateMap) {
 		this.initialState = initialState;
+		this.currentState = initialState;
 		this.stateMap = stateMap;
 		// TODO
 	}
@@ -38,6 +40,8 @@ public class MealyMachine {
 	 * @param input the input to be read by the Machine
 	 */
 	public void run(String input) {
+		setEntry(input);
+		while(nextState()) {};
 		// TODO
 	}
 	
@@ -45,6 +49,7 @@ public class MealyMachine {
 	 * Runs the Mealy Machine using the stateMap
 	 */
 	public void run() {
+		while(nextState()) {};
 		// TODO
 	}
 	
@@ -60,8 +65,11 @@ public class MealyMachine {
 	 * Goes to the next state in execution until it is finished executing
 	 */
 	public boolean nextState() {
-		boolean isThereNextState = entryPosition++ < 60;
-		System.out.println("Beat number: " + entryPosition);
+		stateMap.get(currentState).get(entry.charAt(entryPosition)).getSecond().execute();
+		currentState = stateMap.get(currentState).get(entry.charAt(entryPosition)).getFirst();
+		entryPosition++;
+		boolean isThereNextState = entryPosition < entryLength;
+		//System.out.println("Beat number: " + entryPosition);
 		// TODO
 		return isThereNextState;
 	}
@@ -82,6 +90,7 @@ public class MealyMachine {
 	 */
 	public void setEntry(String entry) {
 		this.entry = entry;
+		this.entryLength = entry.length();
 		reset();
 	}
 }
