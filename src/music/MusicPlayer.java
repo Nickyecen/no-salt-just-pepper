@@ -10,6 +10,7 @@ public class MusicPlayer {
 
 	public static final double MAX_VOLUME = 100; // TODO: Replace with actual max value
 	public static final double MIN_VOLUME = 0; // TODO: Replace with actual min value
+	public static final double DEFAULT_VOLUME = 10; // TODO: Replace with actual default value
 	public static final int MAX_OCTAVE = 9;
 	public static final int MIN_OCTAVE = 0;
 	
@@ -36,7 +37,7 @@ public class MusicPlayer {
 	 * 
 	 * @see music.MusicPlayer
 	 */
-	public class Builder {
+	public static class Builder {
 		private double volume;
 		private Instrument instrument;
 		private int octave;
@@ -90,7 +91,7 @@ public class MusicPlayer {
 		 * 
 		 * @return the MusicPlayer built
 		 */
-		MusicPlayer build() {
+		public MusicPlayer build() {
 			return new MusicPlayer(volume, instrument, octave);
 		}
 	}
