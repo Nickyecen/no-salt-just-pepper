@@ -1,6 +1,8 @@
 package music.songOrchestrator;
 
-import utilitaries.MealyMachine;
+import java.util.ArrayList;
+
+import stateMachine.StateMachine;
 
 /**
  * Class that will directly control the {@link utilitaries.MealyMachine} responsible for
@@ -12,7 +14,7 @@ public class Control implements Runnable {
 	
 	final private int MILISECS_IN_MINUTE = 60000;
 
-	private MealyMachine composition;
+	private StateMachine<ArrayList<String>, String> composition;
 	private int bpm = 60;
 	private int milisecsPerBeat = MILISECS_IN_MINUTE / bpm;
 	private Status status = Status.STOPPED;
@@ -24,7 +26,7 @@ public class Control implements Runnable {
 	 * 
 	 * @param composition
 	 */
-	public Control(MealyMachine composition) {
+	public Control(StateMachine<ArrayList<String>, String> composition) {
 		this.composition = composition;
 	}
 	
@@ -100,7 +102,7 @@ public class Control implements Runnable {
 	 * 
 	 * @return the Control's composition
 	 */
-	public MealyMachine getComposition() {
+	public StateMachine<ArrayList<String>, String> getComposition() {
 		return composition;
 	}
 
@@ -109,7 +111,7 @@ public class Control implements Runnable {
 	 * 
 	 * @param composition the new composition
 	 */
-	public void setComposition(MealyMachine composition) {
+	public void setComposition(StateMachine<ArrayList<String>, String> composition) {
 		this.composition = composition;
 	}
 

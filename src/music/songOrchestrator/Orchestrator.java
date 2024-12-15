@@ -1,6 +1,9 @@
 package music.songOrchestrator;
 
-import utilitaries.MealyMachine;
+import java.util.ArrayList;
+
+import music.Interpreter;
+import stateMachine.StateMachine;
 
 /**
  * Class that orchestrates the {@link utilitaries.MealyMachine} that will play the midi
@@ -9,40 +12,51 @@ import utilitaries.MealyMachine;
  */
 public class Orchestrator {
 	
-	private String midiSong;
-	private final Control control;
+	private final String DECODER_MACHINE_PATH = "src/res/decoderMachine.json";
+	
+	private String songRequest;
+	private final Control CONTROL;
+	private final Interpreter INTERPRETER;
 
 	/**
 	 * Constructs the Orchestrator with the composition it will guide
 	 * 
 	 * @param composition
 	 */
-	public Orchestrator(MealyMachine composition) {
-		this.control = new Control(composition);
+	public Orchestrator() {
+		this.CONTROL = new Control(this.loadComposition());
+		this.INTERPRETER = Interpreter.loadFrom(DECODER_MACHINE_PATH);
+	}
+
+	private StateMachine<ArrayList<String>, String> loadComposition() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
 	 * Starts playing the composition
 	 */
 	public void play() {
-		if(control.getStatus() == Status.STOPPED) {
-			control.getComposition().setEntry(midiSong);
+		if(CONTROL.getStatus() == Status.STOPPED) {
+			INTERPRETER.interpret(songRequest);
+			CONTROL.getComposition().setWord(INTERPRETER.getInterpretation());
+			System.out.println(INTERPRETER.getInterpretation());
 		}
-		control.start();
+		CONTROL.start();
 	}
 	
 	/**
 	 * Pauses the playing of the composition
 	 */
 	public void pause() {
-		if(control.getStatus() != Status.STOPPED) control.setStatus(Status.PAUSED);
+		if(CONTROL.getStatus() != Status.STOPPED) CONTROL.setStatus(Status.PAUSED);
 	}
 	
 	/**
 	 * Stops the playing of the composition
 	 */
 	public void stop() {
-		control.setStatus(Status.STOPPED);
+		CONTROL.setStatus(Status.STOPPED);
 	}
 	
 	/**
@@ -50,8 +64,8 @@ public class Orchestrator {
 	 * 
 	 * @return the midi song being orchestrated
 	 */
-	public String getMidiSong() {
-		return midiSong;
+	public String getSongRequest() {
+		return songRequest;
 	}
 
 	/**
@@ -59,9 +73,11 @@ public class Orchestrator {
 	 * 
 	 * @param midiSong the new midi song
 	 */
-	public void setMidiSong(String midiSong) {
-		this.midiSong = midiSong;
-		control.getComposition().setEntry(midiSong);
+	public void setSongRequest(String songRequest) {
+		this.songRequest = songRequest;
+		INTERPRETER.interpret(songRequest);
+		System.out.println(INTERPRETER.getInterpretation());
+		CONTROL.getComposition().setWord(INTERPRETER.getInterpretation());
 	}
 
 	/**
@@ -70,7 +86,12 @@ public class Orchestrator {
 	 * @return the control
 	 */
 	public Control getControl() {
-		return control;
+		return CONTROL;
+	}
+
+	public void setBpm(int number) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

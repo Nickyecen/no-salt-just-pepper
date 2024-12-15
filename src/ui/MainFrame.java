@@ -1,7 +1,6 @@
 package ui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,27 +17,19 @@ import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.undo.UndoManager;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
-import main.Main;
+import music.songOrchestrator.Orchestrator;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements ActionListener, ChangeListener, ItemListener {
@@ -50,6 +41,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	final private String PLAY_ICON_PATH = "/res/play_icon.png";
 	final private String PAUSE_ICON_PATH = "/res/pause_icon.png";
 	final private String STOP_ICON_PATH = "/res/stop_icon.png";
+	final private String LOGO_ICON_PATH = "/res/logo_icon.png";
 
 	final private int DEFAULT_BPM = 120;
 	final private int BPM_MIN = 1;
@@ -78,7 +70,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	final private String WINDOW_MENU_LABEL = "Window";
 	final private String DARK_THEME_MENU_ITEM_LABEL = "Toggle Dark Theme";
 
-	private Main mainInstance;
+	private Orchestrator orchestrator;
 
 	private GridBagLayout layout;
 
@@ -99,86 +91,14 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	private TextRow instrumentRow;
 	private TextRow noteRow;
 
+	private ImageIcon logoIcon;
 	private ImageIcon playIcon;
 	private ImageIcon pauseIcon;
 	private ImageIcon stopIcon;
 
 	private JFileChooser fileChooser;
 	private TextFilter textFilter;
-	private MidiFilter midiFilter;
-
-	private class TextArea extends JScrollPane {
-
-		private JTextArea textArea;
-		private UndoManager manager;
-
-		private TextArea() {
-			this.textArea = new JTextArea();
-			this.textArea.setLineWrap(true);
-			this.textArea.setWrapStyleWord(true);
-			this.setViewportView(this.textArea);
-
-			this.manager = new UndoManager();
-			this.textArea.getDocument().addUndoableEditListener(this.manager);
-		}
-
-		private void undo() {
-			this.manager.undo();
-		}
-
-		private void redo() {
-			this.manager.redo();
-		}
-
-		private void clear() {
-			this.textArea.setText("");
-		}
-
-		private void append(String line) {
-			this.textArea.append(line);
-		}
-	}
-
-	private class SpinnerRow extends JPanel {
-
-		private JLabel label;
-		private JSpinner spinner;
-		private SpinnerNumberModel model;
-
-		private SpinnerRow(String label, int minimum, int maximum, int stepSize, int defaultValue) {
-			GridLayout layout = new GridLayout(1, 2);
-			this.setLayout(layout);
-
-			this.label = new JLabel(label);
-			this.add(this.label);
-
-			this.model = new SpinnerNumberModel();
-			this.model.setMinimum(minimum);
-			this.model.setMaximum(maximum);
-			this.model.setStepSize(stepSize);
-			this.model.setValue(defaultValue);
-
-			this.spinner = new JSpinner(this.model);
-			this.add(this.spinner);
-		}
-	}
-
-	private class TextRow extends JPanel {
-
-		private JLabel label;
-		private JLabel info;
-
-		private TextRow(String label, String info) {
-			GridLayout layout = new GridLayout(1, 2);
-			this.setLayout(layout);
-
-			this.label = new JLabel(label);
-			this.add(this.label);
-
-			this.info = new JLabel(info);
-			this.add(this.info);
-		}
-	}
+	private MidiFilter midiFilter;			
 
 	private GridBagConstraints textAreaConstraints() {
 
@@ -276,73 +196,6 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		return c;
 	}
 
-    private String getFileExtension(File f) {
-        String ext = null;
-        String s = f.getName();
-        int i = s.lastIndexOf('.');
-
-        if (i > 0 &&  i < s.length() - 1) {
-            ext = s.substring(i+1).toLowerCase();
-        }
-        return ext;
-    }
-
-	private class TextFilter extends FileFilter {
-
-		@Override
-		public boolean accept(File f) {
-
-			if (f.isDirectory()) {
-		        return true;
-		    }
-
-			String extension = getFileExtension(f);
-	        if (extension != null) {
-	            if (extension.equals("txt")) {
-					return true;
-				} else {
-					return false;
-				}
-	        }
-
-	        return false;
-		}
-
-		@Override
-		public String getDescription() {
-			return ".txt";
-		}
-
-	}
-
-	private class MidiFilter extends FileFilter {
-
-		@Override
-		public boolean accept(File f) {
-
-			if (f.isDirectory()) {
-		        return true;
-		    }
-
-			String extension = getFileExtension(f);
-	        if (extension != null) {
-	            if (extension.equals("mid")) {
-					return true;
-				} else {
-					return false;
-				}
-	        }
-
-	        return false;
-		}
-
-		@Override
-		public String getDescription() {
-			return ".mid";
-		}
-
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -356,12 +209,12 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 			setStopState();
 		}
 		else if (UNDO_ACTION.equals(e.getActionCommand())) {
-			if(this.textArea.manager.canUndo()) {
+			if(this.textArea.getUndoManager().canUndo()) {
 				this.textArea.undo();
 			}
 		}
 		else if (REDO_ACTION.equals(e.getActionCommand())) {
-			if(this.textArea.manager.canRedo()) {
+			if(this.textArea.getUndoManager().canRedo()) {
 				this.textArea.redo();
 			}
 		}
@@ -404,7 +257,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		this.mainInstance.setBpm((int) this.bpmRow.model.getNumber());
+		this.orchestrator.setBpm((int) this.bpmRow.getModel().getNumber());
 	}
 
 	@Override
@@ -426,42 +279,46 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	}
 
 	private void setPlayState() {
-
 		this.playButton.setIcon(pauseIcon);
 		this.playButton.setActionCommand(PAUSE_ACTION);
 		this.stopButton.setEnabled(true);
-		this.mainInstance.play();
+		
+		this.orchestrator.setSongRequest(textArea.getText());
+		this.orchestrator.play();
 	}
 
 	private void setPauseState() {
 
 		this.playButton.setIcon(playIcon);
 		this.playButton.setActionCommand(PLAY_ACTION);
-		this.mainInstance.pause();
+		this.orchestrator.pause();
 	}
 
 	public void setStopState() {
 
 		setPauseState();
 		this.stopButton.setEnabled(false);
-		this.mainInstance.stop();
+		this.orchestrator.stop();
 	}
 
 	public void setInstrument(String instrument) {
-		this.instrumentRow.info.setText(instrument);
+		this.instrumentRow.getInfo().setText(instrument);
 	}
 
 	public void setNote(String note) {
-		this.noteRow.info.setText(note);
+		this.noteRow.getInfo().setText(note);
 	}
 
-	public MainFrame(Main mainInstance) {
+	public MainFrame(Orchestrator orchestrator) {
 
-		this.mainInstance = mainInstance;
+		this.orchestrator = orchestrator;
 
+		this.logoIcon = new ImageIcon(getClass().getResource(LOGO_ICON_PATH));
 		this.playIcon = new ImageIcon(getClass().getResource(PLAY_ICON_PATH));
 		this.pauseIcon = new ImageIcon(getClass().getResource(PAUSE_ICON_PATH));
 		this.stopIcon = new ImageIcon(getClass().getResource(STOP_ICON_PATH));
+		
+		setIconImage(this.logoIcon.getImage());
 
 		setTitle(WINDOW_TITLE);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -527,9 +384,9 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		this.stopButton.addActionListener(this);
 		add(this.stopButton, stopButtonConstraints());
 
-		mainInstance.setBpm(DEFAULT_BPM);
+		orchestrator.setBpm(DEFAULT_BPM);
 		this.bpmRow = new SpinnerRow(BPM_LABEL, BPM_MIN, BPM_MAX, BPM_STEP, DEFAULT_BPM);
-		this.bpmRow.spinner.addChangeListener(this);
+		this.bpmRow.getSpinner().addChangeListener(this);
 		add(this.bpmRow, bpmRowConstraints());
 
 		this.instrumentRow = new TextRow(INSTRUMENT_LABEL, NO_INFO);
