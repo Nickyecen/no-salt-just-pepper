@@ -1,0 +1,22 @@
+{
+    "q0": {
+        "A": {"nextState": "q0", "command": "playNoteA"},
+        "B": {"nextState": "q0", "command": "playNoteB"},
+        "C": {"nextState": "q0", "command": "playNoteC"},
+        "D": {"nextState": "q0", "command": "playNoteD"},
+        "E": {"nextState": "q0", "command": "playNoteE"},
+        "F": {"nextState": "q0", "command": "playNoteF"},
+        "G": {"nextState": "q0", "command": "playNoteG"},
+        "T": {"nextState": "q0", "command": "changeInstrumentTo125"},
+        "M": {"nextState": "q0", "command": "raiseBPMBy80"},
+        "i": {"nextState": "q0", "command": "returnToPreviousInstrument"},
+        "R": {"nextState": "q0", "command": "rest"},
+        "I": {"nextState": "q0", "command": "nextInstrument"},
+        "m": {"nextState": "q0", "command": "randomBPM"},
+        "n": {"nextState": "q0", "command": "playRandomNote"},
+        "V": {"nextState": "q0", "command": "doubleVolume"},
+        "v": {"nextState": "q0", "command": "returnToDefaultVolume"},
+        "O": {"nextState": "q0", "command": "raiseOctave"},
+        "o": {"nextState": "q0", "command": "lowerOctave"}
+    }
+}

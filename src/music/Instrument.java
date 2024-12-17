@@ -177,7 +177,7 @@ public enum Instrument {
 	 * @author nickyecen
 	 */
 	public int getMidiCode() {
-		return midiCode;
+		return midiCode + 1;
 	}
 	
 }

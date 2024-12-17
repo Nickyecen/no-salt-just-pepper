@@ -6,7 +6,7 @@ import music.Interpreter;
 import stateMachine.StateMachine;
 
 /**
- * Class that orchestrates the {@link utilitaries.MealyMachine} that will play the midi
+ * Class that orchestrates the song the user has put in
  * 
  * @author nickyecen
  */
@@ -19,18 +19,13 @@ public class Orchestrator {
 	private final Interpreter INTERPRETER;
 
 	/**
-	 * Constructs the Orchestrator with the composition it will guide
+	 * Constructs the music.songOrchestrator.Orchestrator with the composition it will guide
 	 * 
 	 * @param composition
 	 */
 	public Orchestrator() {
-		this.CONTROL = new Control(this.loadComposition());
+		this.CONTROL = new Control();
 		this.INTERPRETER = Interpreter.loadFrom(DECODER_MACHINE_PATH);
-	}
-
-	private StateMachine<ArrayList<String>, String> loadComposition() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/**
@@ -40,7 +35,6 @@ public class Orchestrator {
 		if(CONTROL.getStatus() == Status.STOPPED) {
 			INTERPRETER.interpret(songRequest);
 			CONTROL.getComposition().setWord(INTERPRETER.getInterpretation());
-			System.out.println(INTERPRETER.getInterpretation());
 		}
 		CONTROL.start();
 	}
@@ -76,22 +70,23 @@ public class Orchestrator {
 	public void setSongRequest(String songRequest) {
 		this.songRequest = songRequest;
 		INTERPRETER.interpret(songRequest);
-		System.out.println(INTERPRETER.getInterpretation());
 		CONTROL.getComposition().setWord(INTERPRETER.getInterpretation());
 	}
 
 	/**
-	 * Gets the control being used
+	 * Gets the {@link music.songOrchestrator.Orchestrator} being used
 	 * 
-	 * @return the control
+	 * @return the {@link music.songOrchestrator.Orchestrator}
 	 */
 	public Control getControl() {
 		return CONTROL;
 	}
 
+	/**
+	 * Sets the {@link music.songOrchestrator.Control}'s BPM 
+	 */
 	public void setBpm(int number) {
-		// TODO Auto-generated method stub
-		
+		CONTROL.setBpm(number);		
 	}
 
 }

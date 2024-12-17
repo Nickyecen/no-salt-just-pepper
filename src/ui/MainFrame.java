@@ -29,6 +29,7 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
+import music.songOrchestrator.Control;
 import music.songOrchestrator.Orchestrator;
 
 @SuppressWarnings("serial")
@@ -43,7 +44,6 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	final private String STOP_ICON_PATH = "/res/stop_icon.png";
 	final private String LOGO_ICON_PATH = "/res/logo_icon.png";
 
-	final private int DEFAULT_BPM = 120;
 	final private int BPM_MIN = 1;
 	final private int BPM_MAX = 999;
 	final private int BPM_STEP = 10;
@@ -384,8 +384,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		this.stopButton.addActionListener(this);
 		add(this.stopButton, stopButtonConstraints());
 
-		orchestrator.setBpm(DEFAULT_BPM);
-		this.bpmRow = new SpinnerRow(BPM_LABEL, BPM_MIN, BPM_MAX, BPM_STEP, DEFAULT_BPM);
+		this.bpmRow = new SpinnerRow(BPM_LABEL, BPM_MIN, BPM_MAX, BPM_STEP, Control.getDefaultBPM());
 		this.bpmRow.getSpinner().addChangeListener(this);
 		add(this.bpmRow, bpmRowConstraints());
 

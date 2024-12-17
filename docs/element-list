@@ -1,7 +1,7 @@
-module:TrabalhoTCP
+controlCommands
 main
 music
 music.songOrchestrator
-playerCommands
+stateMachine
 ui
 utilitaries

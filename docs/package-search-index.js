@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"TrabalhoTCP","l":"main"},{"m":"TrabalhoTCP","l":"music"},{"m":"TrabalhoTCP","l":"music.songOrchestrator"},{"m":"TrabalhoTCP","l":"playerCommands"},{"m":"TrabalhoTCP","l":"ui"},{"m":"TrabalhoTCP","l":"utilitaries"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"controlCommands"},{"l":"main"},{"l":"music"},{"l":"music.songOrchestrator"},{"l":"stateMachine"},{"l":"ui"},{"l":"utilitaries"}];updateSearchResults();

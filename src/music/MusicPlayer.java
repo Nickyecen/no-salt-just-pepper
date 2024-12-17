@@ -3,18 +3,24 @@ package music;
 /**
  * Class of a music player that can play notes using JFugue
  * 
- * @author 
  * @author nickyecen
  */
 public class MusicPlayer {
 
-	public static final double MAX_VOLUME = 100; // TODO: Replace with actual max value
-	public static final double MIN_VOLUME = 0; // TODO: Replace with actual min value
-	public static final double DEFAULT_VOLUME = 10; // TODO: Replace with actual default value
+	public static final int MAX_VOLUME = 127; // TODO: Replace with actual max value
+	public static final int MIN_VOLUME = 0; // TODO: Replace with actual min value
+	public static final int DEFAULT_VOLUME = 10; // TODO: Replace with actual default value
+	
 	public static final int MAX_OCTAVE = 9;
 	public static final int MIN_OCTAVE = 0;
+	public static final int DEFAULT_OCTAVE = 0;
 	
-	private double volume; // TODO: Make volume code robust, eg: I shouldn't be allowed to set the volume to -1
+	
+	private double previousVolume; // TODO: Make volume code robust, eg: I shouldn't be allowed to set the volume to -1
+	private Instrument previousInstrument;
+	private int previousOctave; // TODO: Make setter robust
+	
+	private int volume; // TODO: Make volume code robust, eg: I shouldn't be allowed to set the volume to -1
 	private Instrument instrument;
 	private int octave; // TODO: Make setter robust
 
@@ -26,7 +32,7 @@ public class MusicPlayer {
 	 * @param instrument the {@link music.Instrument} that the {@link music.Note} will use
 	 * @param octave the octave in which each {@link music.Note} will be played
 	 */
-	private MusicPlayer(double volume, Instrument instrument, int octave) {
+	private MusicPlayer(int volume, Instrument instrument, int octave) {
 		this.setVolume(volume);
 		this.instrument = instrument;
 		this.setOctave(octave);
@@ -38,7 +44,7 @@ public class MusicPlayer {
 	 * @see music.MusicPlayer
 	 */
 	public static class Builder {
-		private double volume;
+		private int volume;
 		private Instrument instrument;
 		private int octave;
 	
@@ -58,7 +64,7 @@ public class MusicPlayer {
 		 * @param volume the new volume value
 		 * @return the builder with the updated value
 		 */
-		public Builder volume(double volume) {
+		public Builder volume(int volume) {
 			this.volume = volume; // Make attribution more robust (private setter?)
 			return this;
 		}
@@ -87,9 +93,9 @@ public class MusicPlayer {
 		}
 		
 		/**
-		 * Builds the MusicPlayer created with the builder
+		 * Builds the {@link music.MusicPlayer} created with the builder
 		 * 
-		 * @return the MusicPlayer built
+		 * @return the {@link music.MusicPlayer} built
 		 */
 		public MusicPlayer build() {
 			return new MusicPlayer(volume, instrument, octave);
@@ -98,21 +104,23 @@ public class MusicPlayer {
 
 	// TODO: Create method
 	/**
-	 * Changes the MusicPlayer's {@link music.Instrument} to the provided {@link music.Instrument}
+	 * Changes the {@link music.MusicPlayer}'s {@link music.Instrument} to the provided {@link music.Instrument}
 	 * 
-	 * @param instrument the {@link music.Instrument} to change the MusicPlayer's {@link music.Instrument} to
+	 * @param instrument the {@link music.Instrument} to change the {@link music.MusicPlayer}'s {@link music.Instrument} to
 	 */
-	public void changeInstrumentTo(Instrument instrument) {
+	public void setInstrument(Instrument instrument) {
+		this.previousInstrument = this.instrument;
+		this.instrument = instrument;
 		// TODO
 	}
 
 	/**
-	 * Changes the MusicPlayer's {@link music.Instrument} to the {@link music.Instrument} of the provided midi code.
+	 * Changes the {@link music.MusicPlayer}'s {@link music.Instrument} to the {@link music.Instrument} of the provided midi code.
 	 * 
-	 * @param midiCode the midi code of the {@link music.Instrument} to change the MusicPlayer's {@link music.Instrument} to
+	 * @param midiCode the midi code of the {@link music.Instrument} to change the {@link music.MusicPlayer}'s {@link music.Instrument} to
 	 */
-	public void changeInstrumentTo(int midiCode) {
-		changeInstrumentTo(Instrument.fromMidiCode(midiCode));
+	public void setInstrument(int midiCode) {
+		setInstrument(Instrument.fromMidiCode(midiCode % 128));
 	}
 
 	// TODO: Create method
@@ -126,50 +134,134 @@ public class MusicPlayer {
 	}
 
 	/**
-	 * Gets the volume of the MusicPlayer
+	 * Gets the volume of the {@link music.MusicPlayer}
 	 * 
-	 * @return the volume of the MusicPlayer
+	 * @return the volume of the {@link music.MusicPlayer}
 	 */
-	public double getVolume() {
+	public int getVolume() {
 		return volume;
 	}
 
-	// TODO: Make function robust
 	/**
-	 * Sets the volume of the MusicPlayer
+	 * Gets the maximum volume of {@link music.MusicPlayer}
 	 * 
-	 * @param volume the volume to be set
+	 * @return the maximum volume of {@link music.MusicPlayer}
 	 */
-	public void setVolume(double volume) {
-		this.volume = volume; // Make attribution more robust
+	public static int getMaxVolume() {
+		return MAX_VOLUME;
 	}
 
 	/**
-	 * Gets the octave of the MusicPlayer
+	 * Gets the minimum volume of {@link music.MusicPlayer}
 	 * 
-	 * @return the octave of the MusicPlayer
+	 * @return the minimum volume of {@link music.MusicPlayer}
+	 */
+	public static int getMinVolume() {
+		return MIN_VOLUME;
+	}
+
+	/**
+	 * Gets the default volume of {@link music.MusicPlayer}
+	 * 
+	 * @return the default volume of {@link music.MusicPlayer}
+	 */
+	public static int getDefaultVolume() {
+		return DEFAULT_VOLUME;
+	}
+
+	/**
+	 * Gets the maximum octave of the {@link music.MusicPlayer}
+	 * 
+	 * @return the maximum octave of the {@link music.MusicPlayer}
+	 */
+	public static int getMaxOctave() {
+		return MAX_OCTAVE;
+	}
+
+	/**
+	 * Gets the minimum octave of the {@link music.MusicPlayer}
+	 * 
+	 * @return the minimum octave of the {@link music.MusicPlayer}
+	 */
+	public static int getMinOctave() {
+		return MIN_OCTAVE;
+	}
+	
+	/**
+	 * Gets the default octave of {@link music.MusicPlayer}
+	 * 
+	 * @return the default octave of {@link music.MusicPlayer}
+	 */
+	public static int getDefaultOctave() {
+		return DEFAULT_OCTAVE;
+	}
+
+	/**
+	 * Sets the volume of the {@link music.MusicPlayer}
+	 * 
+	 * @param volume the volume to be set
+	 */
+	public void setVolume(int volume) {
+		if(volume > MAX_VOLUME) this.volume = MAX_VOLUME;
+		else if(volume < MIN_VOLUME) this.volume = MIN_VOLUME;
+		else this.volume = volume;	
+	}
+
+	/**
+	 * Gets the octave of the {@link music.MusicPlayer}
+	 * 
+	 * @return the octave of the {@link music.MusicPlayer}
 	 */
 	public int getOctave() {
 		return octave;
 	}
 
-	// TODO: Make function robust
 	/**
-	 * Sets the octave of the MusicPlayer
+	 * Sets the octave of the {@link music.MusicPlayer}
 	 * 
 	 * @param octave the octave to be set
 	 */
 	public void setOctave(int octave) {
-		this.octave = octave; // Make attribution more robust
+		if(octave > MAX_OCTAVE) this.octave = MAX_OCTAVE;
+		else if(octave < MIN_OCTAVE) this.octave = MIN_OCTAVE;
+		else this.octave = octave;
+		
 	}
 
 	/**
-	 * Gets the {@link music.Instrument} of the MusicPlayer
+	 * Gets the {@link music.Instrument} of the {@link music.MusicPlayer}
 	 * 
-	 * @return the {@link music.Instrument} of the MusicPlayer
+	 * @return the {@link music.Instrument} of the {@link music.MusicPlayer}
 	 */
 	public Instrument getInstrument() {
 		return instrument;
+	}
+
+	/**
+	 * Gets the previous volume of the {@link music.MusicPlayer}
+	 * 
+	 * @return the previous volume of the {@link music.MusicPlayer}
+	 */
+	public double getPreviousVolume() {
+		return previousVolume;
+	}
+
+	/**
+	 * Gets the previous {@link music.Instrument} of the {@link music.MusicPlayer}
+	 * 
+	 * @return the previous {@link music.Instrument} of the {@link music.MusicPlayer}
+	 */
+	public Instrument getPreviousInstrument() {
+		return previousInstrument;
+	}
+
+	/**
+	 * Gets the previous octave of the {@link music.MusicPlayer}
+	 * 
+	 * @return the previous octave of the {@link music.MusicPlayer}
+	 */
+	public int getPreviousOctave() {
+		return previousOctave;
 	}
 	
 }
