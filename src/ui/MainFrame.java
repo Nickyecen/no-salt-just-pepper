@@ -209,14 +209,10 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 			setStopState();
 		}
 		else if (UNDO_ACTION.equals(e.getActionCommand())) {
-			if(this.textArea.getUndoManager().canUndo()) {
-				this.textArea.undo();
-			}
+			this.textArea.undo();
 		}
 		else if (REDO_ACTION.equals(e.getActionCommand())) {
-			if(this.textArea.getUndoManager().canRedo()) {
-				this.textArea.redo();
-			}
+			this.textArea.redo();
 		}
 		else if (OPEN_TEXT_FILE_ACTION.equals(e.getActionCommand())) {
 
@@ -257,7 +253,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		this.orchestrator.setBpm((int) this.bpmRow.getModel().getNumber());
+		this.orchestrator.setBpm(this.bpmRow.getNumber());
 	}
 
 	@Override
@@ -267,13 +263,12 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 
 			if (e.getStateChange() == ItemEvent.DESELECTED) {
 				FlatMacLightLaf.setup();
-				FlatLaf.updateUI();
 			}
 			else {
 				FlatMacDarkLaf.setup();
-				FlatLaf.updateUI();
 			}
 
+			FlatLaf.updateUI();
 			SwingUtilities.updateComponentTreeUI(this.fileChooser);
 		}
 	}
@@ -302,11 +297,11 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	}
 
 	public void setInstrument(String instrument) {
-		this.instrumentRow.getInfo().setText(instrument);
+		this.instrumentRow.setInfo(instrument);
 	}
 
 	public void setNote(String note) {
-		this.noteRow.getInfo().setText(note);
+		this.noteRow.setInfo(note);
 	}
 
 	public MainFrame(Orchestrator orchestrator) {
@@ -386,7 +381,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 
 		orchestrator.setBpm(DEFAULT_BPM);
 		this.bpmRow = new SpinnerRow(BPM_LABEL, BPM_MIN, BPM_MAX, BPM_STEP, DEFAULT_BPM);
-		this.bpmRow.getSpinner().addChangeListener(this);
+		this.bpmRow.addChangeListener(this);
 		add(this.bpmRow, bpmRowConstraints());
 
 		this.instrumentRow = new TextRow(INSTRUMENT_LABEL, NO_INFO);
