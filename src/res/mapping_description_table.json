@@ -1,0 +1,14 @@
+[
+  ["a/A - g/G", "Notes A - G"],
+  ["<space>", "Rest"],
+  ["+", "Double Volume"],
+  ["-", "Reset Volume"],
+  ["R+", "Increase One Octave"],
+  ["R-", "Decrease One Octave"],
+  ["BPM+", "Increase BPM By 80"],
+  ["<newline>", "Change Instrument"],
+  ["o/O/i/I/u/U", "Repeat Note (if last character was a note). Else a telefone rings"],
+  ["?", "Play Random Note"],
+  [";", "Set Random BPM"],
+  ["Other", "Do Nothing"]
+]

@@ -25,6 +25,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
@@ -38,6 +39,8 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	final private String WINDOW_TITLE = "No Salt Just Pepper";
 	final private int DEFAULT_WINDOW_WIDTH = 800;
 	final private int DEFAULT_WINDOW_HEIGHT = 600;
+	final private int DEFAULT_MAPPING_DIALOG_WIDTH = 400;
+	final private int DEFAULT_MAPPING_DIALOG_HEIGHT = 320;
 
 	final private String PLAY_ICON_PATH = "/res/play_icon.png";
 	final private String PAUSE_ICON_PATH = "/res/pause_icon.png";
@@ -55,6 +58,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	final private String SAVE_MIDI_ACTION = "saveMidi";
 	final private String UNDO_ACTION = "undo";
 	final private String REDO_ACTION = "redo";
+	final private String MAPPING_ACTION = "mapping";
 
 	final private String BPM_LABEL = "BPM:";
 	final private String INSTRUMENT_LABEL = "Current Instrument:";
@@ -69,6 +73,8 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	final private String REDO_MENU_ITEM_LABEL = "Redo";
 	final private String WINDOW_MENU_LABEL = "Window";
 	final private String DARK_THEME_MENU_ITEM_LABEL = "Toggle Dark Theme";
+	final private String HELP_MENU_LABEL = "Help";
+	final private String MAPPING_MENU_ITEM_LABEL = "Text-to-Music Mapping";
 
 	private Orchestrator orchestrator;
 
@@ -83,6 +89,8 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	private JMenuItem redoMenuItem;
 	private JMenu windowMenu;
 	private JMenuItem darkThemeMenuItem;
+	private JMenu helpMenu;
+	private JMenuItem mappingMenuItem;
 
 	private TextArea textArea;
 	private JButton playButton;
@@ -98,7 +106,9 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 
 	private JFileChooser fileChooser;
 	private TextFilter textFilter;
-	private MidiFilter midiFilter;			
+	private MidiFilter midiFilter;
+
+	private TableDialog mappingTableDialog;
 
 	private GridBagConstraints textAreaConstraints() {
 
@@ -249,6 +259,9 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
                 // TODO: Implementar salvamento de MIDi
             }
 		}
+		else if (MAPPING_ACTION.equals(e.getActionCommand())) {
+			this.mappingTableDialog.showDialog();
+		}
 	}
 
 	@Override
@@ -277,7 +290,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		this.playButton.setIcon(pauseIcon);
 		this.playButton.setActionCommand(PAUSE_ACTION);
 		this.stopButton.setEnabled(true);
-		
+
 		this.orchestrator.setSongRequest(textArea.getText());
 		this.orchestrator.play();
 	}
@@ -312,7 +325,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		this.playIcon = new ImageIcon(getClass().getResource(PLAY_ICON_PATH));
 		this.pauseIcon = new ImageIcon(getClass().getResource(PAUSE_ICON_PATH));
 		this.stopIcon = new ImageIcon(getClass().getResource(STOP_ICON_PATH));
-		
+
 		setIconImage(this.logoIcon.getImage());
 
 		setTitle(WINDOW_TITLE);
@@ -365,6 +378,14 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		this.darkThemeMenuItem.addItemListener(this);
 		this.windowMenu.add(darkThemeMenuItem);
 
+		this.helpMenu = new JMenu(HELP_MENU_LABEL);
+		this.helpMenu.setMnemonic(KeyEvent.VK_H);
+		this.menuBar.add(helpMenu);
+		this.mappingMenuItem = new JMenuItem(MAPPING_MENU_ITEM_LABEL);
+		this.mappingMenuItem.setActionCommand(MAPPING_ACTION);
+		this.mappingMenuItem.addActionListener(this);
+		this.helpMenu.add(mappingMenuItem);
+
 		this.textArea = new TextArea();
 		add(this.textArea, textAreaConstraints());
 
@@ -389,5 +410,21 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 
 		this.noteRow = new TextRow(NOTE_LABEL, NO_INFO);
 		add(this.noteRow, noteRowConstraints());
+
+		String[] columnNames = {"Text", "Action"};
+
+		File mappingFile = new File("src/res/mapping_description_table.json");
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            // Read the JSON array directly into a 2D Object array
+            Object[][] data = objectMapper.readValue(mappingFile, Object[][].class);
+
+			this.mappingTableDialog = new TableDialog(MAPPING_MENU_ITEM_LABEL,
+					DEFAULT_MAPPING_DIALOG_WIDTH, DEFAULT_MAPPING_DIALOG_HEIGHT, data, columnNames);
+
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
 	}
 }
