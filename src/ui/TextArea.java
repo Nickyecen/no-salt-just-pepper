@@ -21,11 +21,13 @@ class TextArea extends JScrollPane {
 	}
 
 	void undo() {
-		this.undoManager.undo();
+		if(this.undoManager.canUndo())
+			this.undoManager.undo();
 	}
 
 	void redo() {
-		this.undoManager.redo();
+		if(this.undoManager.canRedo())
+			this.undoManager.redo();
 	}
 
 	void clear() {
@@ -39,9 +41,4 @@ class TextArea extends JScrollPane {
 	String getText() {
 		return this.textArea.getText();
 	}
-	
-	UndoManager getUndoManager() {
-		return undoManager;
-	}
-	
 }

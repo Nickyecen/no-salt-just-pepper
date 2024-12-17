@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeListener;
 
 class SpinnerRow extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -31,11 +32,11 @@ class SpinnerRow extends JPanel {
 		this.add(this.spinner);
 	}
 	
-	SpinnerNumberModel getModel() {
-		return model;
+	int getNumber() {
+		return (int) this.model.getNumber();
 	}
 	
-	JSpinner getSpinner() {
-		return spinner;
+	void addChangeListener(ChangeListener listener) {
+		this.spinner.addChangeListener(listener);;
 	}
 }

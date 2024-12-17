@@ -22,7 +22,11 @@ class TextRow extends JPanel {
 		this.add(this.info);
 	}
 	
-	JLabel getInfo( ) {
-		return info;
+	String getInfo() {
+		return this.info.getText();
+	}
+
+	void setInfo(String info) {
+		this.info.setText(info);
 	}
 }
