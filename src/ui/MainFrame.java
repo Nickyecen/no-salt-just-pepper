@@ -379,14 +379,9 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		this.stopButton.addActionListener(this);
 		add(this.stopButton, stopButtonConstraints());
 
-<<<<<<< HEAD
 		this.bpmRow = new SpinnerRow(BPM_LABEL, BPM_MIN, BPM_MAX, BPM_STEP, Control.getDefaultBPM());
-		this.bpmRow.getSpinner().addChangeListener(this);
-=======
-		orchestrator.setBpm(DEFAULT_BPM);
-		this.bpmRow = new SpinnerRow(BPM_LABEL, BPM_MIN, BPM_MAX, BPM_STEP, DEFAULT_BPM);
 		this.bpmRow.addChangeListener(this);
->>>>>>> 9b48912fad1009c08466766e99fb4bc221ad244a
+		orchestrator.setBpm(Control.getDefaultBPM());
 		add(this.bpmRow, bpmRowConstraints());
 
 		this.instrumentRow = new TextRow(INSTRUMENT_LABEL, NO_INFO);
