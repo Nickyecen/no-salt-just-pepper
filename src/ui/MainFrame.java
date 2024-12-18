@@ -30,11 +30,15 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
+import music.InstrumentEvent;
+import music.InstrumentListener;
+import music.NoteEvent;
+import music.NoteListener;
 import music.songOrchestrator.Control;
 import music.songOrchestrator.Orchestrator;
 
 @SuppressWarnings("serial")
-public class MainFrame extends JFrame implements ActionListener, ChangeListener, ItemListener {
+public class MainFrame extends JFrame implements ActionListener, ChangeListener, ItemListener, NoteListener, InstrumentListener {
 
 	final private String WINDOW_TITLE = "No Salt Just Pepper";
 	final private int DEFAULT_WINDOW_WIDTH = 800;
@@ -120,6 +124,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridheight = 1;
 		c.weighty = 1.0;
 		c.weightx = 1.0;
+		c.anchor = GridBagConstraints.BASELINE;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(10, 10, 10, 10);
 
@@ -135,7 +140,8 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridwidth = 1;
 		c.gridheight = 3;
 		c.weighty = 0.0;
-		c.weightx = 1.0;
+		c.weightx = 0.0;
+		c.anchor = GridBagConstraints.BASELINE;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(0, 10, 10, 10);
 
@@ -151,7 +157,8 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridwidth = 1;
 		c.gridheight = 3;
 		c.weighty = 0.0;
-		c.weightx = 1.0;
+		c.weightx = 0.0;
+		c.anchor = GridBagConstraints.BASELINE;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(0, 0, 10, 0);
 
@@ -168,6 +175,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridheight = 1;
 		c.weighty = 0.0;
 		c.weightx = 1.0;
+		c.anchor = GridBagConstraints.BASELINE;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(0, 10, 10, 10);
 
@@ -184,6 +192,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridheight = 1;
 		c.weighty = 0.0;
 		c.weightx = 1.0;
+		c.anchor = GridBagConstraints.EAST;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(0, 10, 10, 10);
 
@@ -200,6 +209,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridheight = 1;
 		c.weighty = 0.0;
 		c.weightx = 1.0;
+		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(0, 10, 10, 10);
 
@@ -284,6 +294,17 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 			FlatLaf.updateUI();
 			SwingUtilities.updateComponentTreeUI(this.fileChooser);
 		}
+	}
+
+	@Override
+	public void onNoteEvent(NoteEvent event) {
+		this.noteRow.setInfo(event.getNote());
+	}
+
+	@Override
+	public void onInstrumentEvent(InstrumentEvent event) {
+		this.instrumentRow.setInfo(event.getInstrument());
+
 	}
 
 	private void setPlayState() {
@@ -407,9 +428,11 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 
 		this.instrumentRow = new TextRow(INSTRUMENT_LABEL, NO_INFO);
 		add(this.instrumentRow, instrumentRowConstraints());
+		orchestrator.getControl().getMusicPlayer().setInstrumentListener(this);
 
 		this.noteRow = new TextRow(NOTE_LABEL, NO_INFO);
 		add(this.noteRow, noteRowConstraints());
+		orchestrator.getControl().getMusicPlayer().setNoteListener(this);
 
 		String[] columnNames = {"Text", "Action"};
 
@@ -427,4 +450,6 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
             e1.printStackTrace();
         }
 	}
+
+
 }
