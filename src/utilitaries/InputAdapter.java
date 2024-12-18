@@ -1,85 +1,50 @@
 package utilitaries;
 
-/*this class receives a string and when it is run() substitutes the
- * characters that fall into the else case are rewritten to 'X'
+import java.util.ArrayList;
+import java.util.List;
+
+/* This class was supposed to receive a string and an alphabet filepath;
+ * I could not resolve a method to get the alphabet from an external font, 
+ * like a .json file. I turned it into a constant for temporary usage.
+ * 
+ * When run() is called, it substitutes all the characters
+ * that are not included in the alphabet with 'X';
  */
+
 public class InputAdapter {
-	private String input;
 	
-	//Builder which receives the initial string
+	private static final List<Character> ALPHABET = List.of(
+	        'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g',
+	        ' ', '\n', '+', '-', 'I', 'i', 'O', 'o', 'U', 'u', 'R', '?', 'P', 'M', ';'
+	    ); 
+	
+	private String input;
+	private String output;
+	private ArrayList<Character> alphabet;
+	
+	// Builder which receives the initial string and alphabet filePath
 	public InputAdapter(String input) {
 		this.input = input;
+		this.alphabet = new ArrayList<>(ALPHABET);
 	}
 	
-	//Rewrites the input string so that all characters that would 
-	//fall into the else case are rewritten as 'X'
-	public String run() {
-		int inputLength = input.length();
-		StringBuilder adaptedInput = new StringBuilder(input);
+	// Rewrites the input string so that all characters that are 
+	// not included in the alphabet are rewritten as 'X'
+	public void run() {
+		StringBuilder adaptedInput = new StringBuilder();
 		
-		for(int i = 0; i < inputLength; i++) {
-			char currentChar = Character.toUpperCase(input.charAt(i));
-			switch(currentChar) {
-				case 'A':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'B':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'C':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'D':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'E':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'F':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'G':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'I':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'O':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'U':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'R':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'P':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case 'M':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case '+':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case '-':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case '?':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case ';':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				case '\n':
-					adaptedInput.setCharAt(i, currentChar);
-					break;
-				default:
-					adaptedInput.setCharAt(i, 'X');
-					break;
-			}
-		}
-		return adaptedInput.toString();
+		for (char c : input.toCharArray()) {
+            if (this.alphabet.contains(c)) {
+            	adaptedInput.append(c);
+            } else {
+            	adaptedInput.append('X');
+            }
+        }
+
+		this.output = adaptedInput.toString();
 	}
 
+	public String getOutput() {
+		return this.output;
+	}
 }

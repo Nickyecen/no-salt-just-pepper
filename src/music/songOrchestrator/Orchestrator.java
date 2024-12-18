@@ -33,7 +33,7 @@ public class Orchestrator {
 	 */
 	public void play() {
 		if(CONTROL.getStatus() == Status.STOPPED) {
-			INTERPRETER.interpret(songRequest);
+			INTERPRETER.interpretToDecoder(songRequest);
 			CONTROL.getComposition().setWord(INTERPRETER.getInterpretation());
 		}
 		CONTROL.start();
@@ -69,7 +69,7 @@ public class Orchestrator {
 	 */
 	public void setSongRequest(String songRequest) {
 		this.songRequest = songRequest;
-		INTERPRETER.interpret(songRequest);
+		INTERPRETER.interpretToDecoder(songRequest);
 		CONTROL.getComposition().setWord(INTERPRETER.getInterpretation());
 	}
 

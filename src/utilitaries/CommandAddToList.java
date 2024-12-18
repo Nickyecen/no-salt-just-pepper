@@ -30,5 +30,9 @@ public class CommandAddToList implements Command {
 	public void execute() {
 		array.add(value);
 	}
+	
+	public void setValue (String newValue) {
+		this.value = newValue;
+	}
 
 }

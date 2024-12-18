@@ -2,11 +2,15 @@ package main;
 
 import javax.swing.SwingUtilities;
 
+import org.jfugue.pattern.Pattern;
+
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import music.songOrchestrator.Orchestrator;
 import stateMachine.StateMachine;
 import ui.MainFrame;
+
+import utilitaries.InputAdapter;
 
 public class Main {	
 
