@@ -1,0 +1,22 @@
+{
+    "q0": {
+        "V": {"nextState": "q0", "command": "doNothing"},
+        "v": {"nextState": "q0", "command": "doNothing"},
+        "O": {"nextState": "q0", "command": "raiseOctave"},
+        "o": {"nextState": "q0", "command": "lowerOctave"},
+        "M": {"nextState": "q0", "command": "raiseBPM"},
+        "m": {"nextState": "q0", "command": "randomBPM"},
+        "T": {"nextState": "q0", "command": "setInstrumentTelephone"},
+        "I": {"nextState": "q0", "command": "goToNextInstrument"},
+        "i": {"nextState": "q0", "command": "returnToPreviousInstrument"},
+        "n": {"nextState": "q0", "command": "randomNote"},
+        "R": {"nextState": "q0", "command": "rest"},
+        "A": {"nextState": "q0", "command": "playA"},
+        "B": {"nextState": "q0", "command": "playB"},
+        "C": {"nextState": "q0", "command": "playC"},
+        "D": {"nextState": "q0", "command": "playD"},
+        "E": {"nextState": "q0", "command": "playE"},
+        "F": {"nextState": "q0", "command": "playF"},
+        "G": {"nextState": "q0", "command": "playG"}
+    }
+}

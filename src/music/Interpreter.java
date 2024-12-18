@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.jfugue.pattern.Pattern;
+import org.jfugue.midi.MidiFileManager;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +20,8 @@ import stateMachine.MealyTransition;
 import stateMachine.State;
 import stateMachine.StateMachine;
 import music.MusicPlayer;
+import music.songOrchestrator.WriteControl;
+import controlCommands.CommandMakeWriterDo;
 
 /* Runs the input string through {@link utilitaries.MealyMachine} described
  * in a .json file so it can be ready to be read by
@@ -29,8 +32,10 @@ public class Interpreter {
 	private static final int RANDOM_BPM_MIN = 60;
 	private static final int RANDOM_BPM_MAX = 120;
 	private static final int RAISE_BPM_RATE = 80;
+	final private static String FILE_PATH = "src/res/patternMachine.json";
 	
 	private StateMachine<ArrayList<String>, String> decoderMachine;
+	private static StringBuilder interpretationString = new StringBuilder();
 	private ArrayList<String> interpretation = new ArrayList<String>();	
 	
 	private Interpreter(State<String> state) {
@@ -72,7 +77,7 @@ public class Interpreter {
 				String value = symbolReference.getValue().get("value");
 				
 				State<String> nextState = stateMap.get(nextStateName);
-				CommandAddToList command = new CommandAddToList(interpreter.interpretation, value);
+				CommandAddToString command = new CommandAddToString(interpretationString, value);
 				state.addTransition(symbol, MealyTransition.to(nextState).doing(command));
 				
 			}
@@ -97,8 +102,7 @@ public class Interpreter {
 	 * parameter of (@link utilitaries.MealyMachine}
 	 */
 	public void interpretToDecoder(String word) {
-		reset();
-		
+
 		InputAdapter inputAdapter = new InputAdapter(word);
 		inputAdapter.run();
 		word = inputAdapter.getOutput();
@@ -120,12 +124,10 @@ public class Interpreter {
 		this.decoderMachine.run(parsedWord);
 		
 		// Build interpretation array list
-		ArrayList<String> parsedInterpretation = new ArrayList<String>(interpretation);
-		interpretation.clear();
-		for(String value : parsedInterpretation) {
-			for(char symbol : value.toCharArray()) {
-				interpretation.add(String.valueOf(symbol));
-			}
+		CommandAddToList command = new CommandAddToList(this.interpretation, "");
+		for (int i = 0; i < interpretationString.toString().length(); i++) {
+			command.setValue(String.valueOf(interpretationString.charAt(i)));
+			command.execute();
 		}
 	}
 	
@@ -135,68 +137,66 @@ public class Interpreter {
 	 * 
 	 * @return Pattern JFugue pattern of the song to be played
 	 */
-	public Pattern interpretToJFuguePattern() {
+public Pattern interpretToJFuguePattern() {
 		
 		Pattern song = new Pattern();
-		MusicPlayer.Builder musicPlayerBuilder = new MusicPlayer.Builder();
-		MusicPlayer musicPlayer = musicPlayerBuilder.build();
+		WriteControl control = new WriteControl();
 		
-		String newFragment = "";
-		int currentBPM = 60;
+		ObjectMapper mapper = new ObjectMapper();
+		File fileObj = new File(FILE_PATH);
+		HashMap<String, HashMap<String, HashMap<String, String>>> data = null;
+		try {
+			
+			data = mapper.readValue(fileObj, new TypeReference<HashMap<String, HashMap<String, HashMap<String, String>>>>() {});
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	
+		HashMap<String, State<String>> stateMap = new HashMap<String, State<String>>();
 		
-		for(String symbol : this.interpretation) {
-			switch(symbol){
-				case "V": // Raise volume; this command doesn't reflect on the pattern;
-					newFragment = "";
-					break;
-				case "v": // Lower volume; this command doesn't reflect on the pattern;
-					newFragment = "";
-					break;
-				case "O": // Raise octave;
-					musicPlayer.setOctave(musicPlayer.getOctave()+1);
-					break;
-				case "o": // Lower octave;
-					musicPlayer.setOctave(musicPlayer.getOctave()-1);
-					break;
-				case "M": // Raise BPM by 80;
-					currentBPM += RAISE_BPM_RATE;
-					newFragment = "T" + String.valueOf(currentBPM) + " ";
-					break;
-				case "m": // Randomize BPM between 60 and 120;
-					currentBPM = new Random().nextInt(RANDOM_BPM_MIN, RANDOM_BPM_MAX+1);
-					newFragment = "T" + String.valueOf(currentBPM) + " ";
-					break;
-				case "T": // Change instrument to TELEPHONE_RING;
-					musicPlayer.setInstrument(Instrument.TELEPHONE_RING);
-					newFragment = "I" + String.valueOf(musicPlayer.getInstrument().ordinal()) + " ";
-					break;
-				case "I": // Increase current instrument;
-					musicPlayer.setInstrument(musicPlayer.getInstrument().ordinal() + 1);
-					newFragment = "I" + String.valueOf(musicPlayer.getInstrument().ordinal()) + " ";
-					break;
-				case "i": // Go back to previous instrument;
-					musicPlayer.setInstrument(musicPlayer.getPreviousInstrument());
-					newFragment = "I" + String.valueOf(musicPlayer.getInstrument().ordinal()) + " ";
-					break;
-				case "n": // Register random note, along with its octave;
-					Note randomNote = Note.values()[new Random().nextInt(Note.values().length)];
-					newFragment = randomNote.name() +  String.valueOf(musicPlayer.getOctave()) + " ";
-					break;
-				case "R": // Register pause;
-					newFragment = symbol + " ";
-					break;
-				default: // All the other cases should also be notes;
-					newFragment = symbol +  String.valueOf(musicPlayer.getOctave()) + " ";
-					break;
-			}
-			song.add(newFragment);
+		for(Map.Entry<String, HashMap<String, HashMap<String, String>>> entry : data.entrySet()) {
+			stateMap.put(entry.getKey(), new State<String>(true));
 		}
 		
+		StateMachine<ArrayList<String>, String> writer = new StateMachine<ArrayList<String>, String>(stateMap.get("q0"));
+				
+		for(Map.Entry<String, HashMap<String, HashMap<String, String>>> stateReference : data.entrySet()) {
+			State<String> state = stateMap.get(stateReference.getKey());
+			for(Map.Entry<String, HashMap<String, String>> symbolReference : stateReference.getValue().entrySet()) {
+				String symbol = symbolReference.getKey();
+				String nextStateName = symbolReference.getValue().get("nextState");
+				String commandName = symbolReference.getValue().get("command");		
+				State<String> nextState = stateMap.get(nextStateName);
+		
+				CommandWrite command;
+				
+				command = new CommandMakeWriterDo(control, commandName);
+				
+				
+				state.addTransition(symbol, MealyTransition.to(nextState).doing(command));
+			}
+		}
+		
+		writer.run(this.interpretation);
+		
+		song.add(control.getPattern());
+		
 		return song;
+		
 	}
 	
-	public void interpretToMIDI(String word) {
-		//TODO
+	 /* Writes the JFugue pattern from (@link music.Interpreter)
+	  * interpretation to a midi file
+	  * 
+	  * @Param file the file file_path where it sill be saved
+	  */
+	public void interpretToMIDI(String file) {
+		try {
+            MidiFileManager.savePatternToMidi(interpretToJFuguePattern(), new File(file));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 	
 	 /* Returns the (@link music.Interpreter)
