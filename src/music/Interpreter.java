@@ -20,6 +20,10 @@ import stateMachine.State;
 import stateMachine.StateMachine;
 import music.MusicPlayer;
 
+/* Runs the input string through {@link utilitaries.MealyMachine} described
+ * in a .json file so it can be ready to be read by
+ * (@link music.songOrchestrator.Orchestrator).
+ */ 
 public class Interpreter {
 	
 	private static final int RANDOM_BPM_MIN = 60;
@@ -34,6 +38,12 @@ public class Interpreter {
 		this.decoderMachine = new StateMachine<ArrayList<String>, String>(state);
 	}
 
+	/* Creates the {@link utilitaries.MealyMachine} of the (@link music.Interpreter)
+	 * 
+	 * @param filePath name of the file which contains the 
+	 * {@link utilitaries.MealyMachine}, having its'
+	 * {@link stateMachine.State} and {@link stateMachine.Transitions}
+	 */
 	public static Interpreter loadFrom(String filePath) {
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -72,11 +82,21 @@ public class Interpreter {
 		return interpreter;
 	}
 	
+	/* Resets the {@link stateMachine.State}
+	 * and clears the interpretation (output string)
+	 */
 	public void reset() {
 		this.interpretation.clear();
 		this.decoderMachine.reset();
 	}
 	
+	/* Runs the {@link utilitaries.MealyMachine} using
+	 * word as the parameter and saves the output in
+	 * (@link music.Interpreter) interpretationString
+	 * 
+	 * @param word string that will be passed as input 
+	 * parameter of (@link utilitaries.MealyMachine}
+	 */
 	public void interpretToDecoder(String word) {
 
 		InputAdapter inputAdapter = new InputAdapter(word);
@@ -107,6 +127,12 @@ public class Interpreter {
 		}
 	}
 	
+	/* Converts the characters in the 
+	 * (@link music.Interpreter) interpretation
+	 * string to their equivalent JFUgue pattern
+	 * 
+	 * @return Pattern JFugue pattern of the song to be played
+	 */
 	public Pattern interpretToJFuguePattern() {
 		
 		Pattern song = new Pattern();
@@ -171,8 +197,14 @@ public class Interpreter {
 		//TODO
 	}
 	
+	 /* Returns the (@link music.Interpreter)
+	  * interpretation string
+	  * 
+	  * @return the interpretation of (@link music.Interpreter)
+	  */
 	public ArrayList<String> getInterpretation() {
 		return interpretation;
 	}
 
 }
+
