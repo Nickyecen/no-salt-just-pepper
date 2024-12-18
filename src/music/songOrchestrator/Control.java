@@ -32,12 +32,13 @@ public class Control implements Runnable {
 	final private static int MILISECS_IN_MINUTE = 60000;
 	final private static int DEFAULT_BPM = 120;
 	final private static int RANDOM_BPM_MIN = 60;
-	final private static int RANDOM_BPM_MAX = 120;
+	final private static int RANDOM_BPM_MAX = 240;
 	final private Random RANDOM;
 	final private static String FILE_PATH = "src/res/orchestraMachine.json";
 	
 	private StateMachine<ArrayList<String>, String> composition;
 	private int bpm = DEFAULT_BPM;
+	private int resetBpm = DEFAULT_BPM;
 
 	private int milisecsPerBeat = MILISECS_IN_MINUTE / bpm;
 	private Status status = Status.STOPPED;
@@ -127,13 +128,14 @@ public class Control implements Runnable {
 	 */
 	public void run() {
 		setStatus(Status.PLAYING);
-
+		
+		long startTime = System.currentTimeMillis();
 		boolean shouldContinue = composition.nextState() && getStatus() != Status.STOPPED;
 		while(shouldContinue) {
 	
 			if(shouldWait) {	
 				try {
-					Thread.sleep(milisecsPerBeat);
+					Thread.sleep(milisecsPerBeat - (System.currentTimeMillis() - startTime));
 				} catch (InterruptedException e) {
 					break;
 				}
@@ -158,6 +160,7 @@ public class Control implements Runnable {
 				
 			}
 			
+			startTime = System.currentTimeMillis();
 			shouldContinue = getStatus() != Status.STOPPED && composition.nextState();
 			
 		}
@@ -176,6 +179,10 @@ public class Control implements Runnable {
 			}
 		} else if(getStatus() == Status.STOPPED) {
 			setStatus(Status.PLAYING);
+			this.setBpm(resetBpm);
+			player.setVolume(MusicPlayer.DEFAULT_VOLUME);
+			player.setOctave(MusicPlayer.DEFAULT_OCTAVE);
+			player.setInstrument(MusicPlayer.DEFAULT_INSTRUMENT);
 			thread = new Thread(this);
 			thread.start();
 		}
@@ -340,7 +347,7 @@ public class Control implements Runnable {
 	 * Returns the volume of the {@link music.MusicPlayer} to default
 	 */
 	public void returnToDefaultVolume() {
-		player.setVolume(MusicPlayer.getDefaultVolume() * 2);	
+		player.setVolume(MusicPlayer.getDefaultVolume());	
 		shouldWait = false;
 	}
 	
@@ -368,6 +375,14 @@ public class Control implements Runnable {
 	public void lowerOctave() {
 		player.setOctave(player.getOctave() - 1);
 		shouldWait = false;
+	}
+
+	public int getResetBpm() {
+		return resetBpm;
+	}
+
+	public void setResetBpm(int resetBpm) {
+		this.resetBpm = resetBpm;
 	}		
 
 }

@@ -1,5 +1,10 @@
 package music;
 
+import javax.sound.midi.MidiUnavailableException;
+
+import org.jfugue.pattern.Pattern;
+import org.jfugue.realtime.RealtimePlayer;
+
 /**
  * Class of a music player that can play notes using JFugue
  * 
@@ -11,10 +16,15 @@ public class MusicPlayer {
 	public static final int MIN_VOLUME = 0; // TODO: Replace with actual min value
 	public static final int DEFAULT_VOLUME = 10; // TODO: Replace with actual default value
 	
-	public static final int MAX_OCTAVE = 9;
+	public static final int MAX_OCTAVE = 10;
 	public static final int MIN_OCTAVE = 0;
 	public static final int DEFAULT_OCTAVE = 0;
 	
+	public static final Instrument DEFAULT_INSTRUMENT = Instrument.ACOUSTIC_GRAND_PIANO;
+	
+	private static final int NOTE_LENGTH_IN_MS = 50;
+
+	private final RealtimePlayer player;
 	
 	private double previousVolume; // TODO: Make volume code robust, eg: I shouldn't be allowed to set the volume to -1
 	private Instrument previousInstrument;
@@ -31,8 +41,10 @@ public class MusicPlayer {
 	 * @param volume the volume of how loud the {@link music.Note} will be
 	 * @param instrument the {@link music.Instrument} that the {@link music.Note} will use
 	 * @param octave the octave in which each {@link music.Note} will be played
+	 * @throws MidiUnavailableException 
 	 */
-	private MusicPlayer(int volume, Instrument instrument, int octave) {
+	private MusicPlayer(int volume, Instrument instrument, int octave) throws MidiUnavailableException {
+		this.player = new RealtimePlayer();
 		this.setVolume(volume);
 		this.instrument = instrument;
 		this.setOctave(octave);
@@ -98,7 +110,12 @@ public class MusicPlayer {
 		 * @return the {@link music.MusicPlayer} built
 		 */
 		public MusicPlayer build() {
-			return new MusicPlayer(volume, instrument, octave);
+			try {
+				return new MusicPlayer(volume, instrument, octave);
+			} catch (MidiUnavailableException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 	}
 
@@ -111,6 +128,8 @@ public class MusicPlayer {
 	public void setInstrument(Instrument instrument) {
 		this.previousInstrument = this.instrument;
 		this.instrument = instrument;
+		System.out.println("Instrument changed to " + instrument);
+		player.changeInstrument(instrument.getMidiCode());
 		// TODO
 	}
 
@@ -120,7 +139,7 @@ public class MusicPlayer {
 	 * @param midiCode the midi code of the {@link music.Instrument} to change the {@link music.MusicPlayer}'s {@link music.Instrument} to
 	 */
 	public void setInstrument(int midiCode) {
-		setInstrument(Instrument.fromMidiCode(midiCode % 128));
+		setInstrument(Instrument.fromMidiCode((midiCode - 1) % 128 + 1));
 	}
 
 	// TODO: Create method
@@ -130,6 +149,16 @@ public class MusicPlayer {
 	 * @param note the note to be played
 	 */
 	public void playNote(Note note) {
+		System.out.println("PLAYED " + note);
+		String noteString = note.toString() + String.valueOf(octave);
+		player.startNote(new org.jfugue.theory.Note(noteString));
+		try {
+			Thread.sleep(NOTE_LENGTH_IN_MS);
+		} catch (InterruptedException e) {
+			System.err.println("Music Player note sleep interrupted");
+			e.printStackTrace();
+		}	
+		player.stopNote(new org.jfugue.theory.Note(noteString));
 		// TODO
 	}
 
@@ -205,6 +234,9 @@ public class MusicPlayer {
 		if(volume > MAX_VOLUME) this.volume = MAX_VOLUME;
 		else if(volume < MIN_VOLUME) this.volume = MIN_VOLUME;
 		else this.volume = volume;	
+		
+		System.out.println("Volume " + this.volume);
+		player.changeController((byte) 7, (byte) this.volume);
 	}
 
 	/**

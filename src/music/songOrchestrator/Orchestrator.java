@@ -68,9 +68,11 @@ public class Orchestrator {
 	 * @param midiSong the new midi song
 	 */
 	public void setSongRequest(String songRequest) {
-		this.songRequest = songRequest;
-		INTERPRETER.interpretToDecoder(songRequest);
-		CONTROL.getComposition().setWord(INTERPRETER.getInterpretation());
+		if(CONTROL.getStatus() != Status.PAUSED) {	
+			this.songRequest = songRequest;
+			INTERPRETER.interpretToDecoder(songRequest);
+			CONTROL.getComposition().setWord(INTERPRETER.getInterpretation());
+		}
 	}
 
 	/**
@@ -86,7 +88,7 @@ public class Orchestrator {
 	 * Sets the {@link music.songOrchestrator.Control}'s BPM 
 	 */
 	public void setBpm(int number) {
-		CONTROL.setBpm(number);		
+		CONTROL.setResetBpm(number);		
 	}
 
 }
