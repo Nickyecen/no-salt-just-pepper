@@ -13,7 +13,7 @@ public class MusicPlayer {
 
 	public static final int MAX_VOLUME = 127;
 	public static final int MIN_VOLUME = 0;
-	public static final int DEFAULT_VOLUME = (MAX_VOLUME - MIN_VOLUME) / 2;
+	public static final int DEFAULT_VOLUME = (MAX_VOLUME - MIN_VOLUME) / 3;
 
 	public static final int MAX_OCTAVE = 10;
 	public static final int MIN_OCTAVE = 0;

@@ -46,6 +46,19 @@ public class Control implements Runnable {
 	private boolean shouldWait = true;
 	private Thread thread;
 
+	private EndListener endListener;
+
+	public void setEndListener(EndListener listener) {
+		this.endListener = listener;
+	}
+
+	public void notifyEndListener() {
+		if (endListener != null) {
+			EndEvent event = new EndEvent(this);
+			endListener.onEndEvent(event);
+		}
+	}
+
 	/**
 	 * Constructs the {@link music.songOrchestrator.Control}
 	 */
@@ -196,6 +209,7 @@ public class Control implements Runnable {
 		setStatus(Status.STOPPED);
 		composition.reset();
 		Thread.currentThread().interrupt();
+		notifyEndListener();
 	}
 
 	/**

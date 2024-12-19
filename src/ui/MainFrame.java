@@ -38,10 +38,12 @@ import music.NoteListener;
 import music.VolumeEvent;
 import music.VolumeListener;
 import music.songOrchestrator.Control;
+import music.songOrchestrator.EndEvent;
+import music.songOrchestrator.EndListener;
 import music.songOrchestrator.Orchestrator;
 
 @SuppressWarnings("serial")
-public class MainFrame extends JFrame implements ActionListener, ChangeListener, ItemListener, NoteListener, InstrumentListener, VolumeListener {
+public class MainFrame extends JFrame implements ActionListener, ChangeListener, ItemListener, NoteListener, InstrumentListener, VolumeListener, EndListener {
 
 	final private String WINDOW_TITLE = "No Salt Just Pepper";
 	final private int DEFAULT_WINDOW_WIDTH = 800;
@@ -319,6 +321,11 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	}
 
 	@Override
+	public void onEndEvent(EndEvent event) {
+		setStopState();
+	}
+
+	@Override
 	public void onNoteEvent(NoteEvent event) {
 		this.noteRow.setInfo(event.getNote());
 	}
@@ -329,7 +336,6 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 
 	}
 
-
 	@Override
 	public void onVolumeEvent(VolumeEvent event) {
 		this.volumeRow.setValue(event.getVolume());
@@ -337,9 +343,10 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	}
 
 	private void setPlayState() {
+
+		this.stopButton.setEnabled(true);
 		this.playButton.setIcon(pauseIcon);
 		this.playButton.setActionCommand(PAUSE_ACTION);
-		this.stopButton.setEnabled(true);
 
 		this.orchestrator.setSongRequest(textArea.getText());
 		this.orchestrator.play();
@@ -349,13 +356,16 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 
 		this.playButton.setIcon(playIcon);
 		this.playButton.setActionCommand(PLAY_ACTION);
+
 		this.orchestrator.pause();
 	}
 
 	public void setStopState() {
 
-		setPauseState();
 		this.stopButton.setEnabled(false);
+		this.playButton.setIcon(playIcon);
+		this.playButton.setActionCommand(PLAY_ACTION);
+
 		this.orchestrator.stop();
 	}
 
@@ -449,6 +459,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		this.stopButton.setEnabled(false);
 		this.stopButton.addActionListener(this);
 		add(this.stopButton, stopButtonConstraints());
+		orchestrator.getControl().setEndListener(this);
 
 		this.bpmRow = new SpinnerRow(BPM_LABEL, BPM_MIN, BPM_MAX, BPM_STEP, Control.getDefaultBPM());
 		this.bpmRow.addChangeListener(this);
