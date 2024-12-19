@@ -69,7 +69,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	final private String REDO_ACTION = "redo";
 	final private String MAPPING_ACTION = "mapping";
 
-	final private String BPM_LABEL = "BPM:";
+	final private String BPM_LABEL = "Start BPM:";
 	final private String INSTRUMENT_LABEL = "Current Instrument:";
 	final private String NOTE_LABEL = "Current Note:";
 	final private String VOLUME_LABEL = "Current Volume:";
