@@ -1,7 +1,8 @@
 package music;
 
 import java.io.File;
-
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,6 @@ import org.jfugue.midi.MidiFileManager;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import utilitaries.CommandAddToString;
 import utilitaries.CommandAddToList;
 import utilitaries.InputAdapter;
 import stateMachine.MealyTransition;
@@ -129,6 +129,7 @@ public class Interpreter {
 				interpretation.add(String.valueOf(symbol));
 			}	
 		}
+		
 	}
 	
 	/* Converts the characters in the 
@@ -137,10 +138,10 @@ public class Interpreter {
 	 * 
 	 * @return Pattern JFugue pattern of the song to be played
 	 */
-	public Pattern interpretToJFuguePattern() {
+	private Pattern interpretToJFuguePattern(int inicialBPM) {
 		
 		Pattern song = new Pattern();
-		WriteControl control = new WriteControl();
+		WriteControl control = new WriteControl(inicialBPM);
 		
 		ObjectMapper mapper = new ObjectMapper();
 		File fileObj = new File(FILE_PATH);
@@ -173,13 +174,11 @@ public class Interpreter {
 				
 				command = new CommandMakeWriterDo(control, commandName);
 				
-				
 				state.addTransition(symbol, MealyTransition.to(nextState).doing(command));
 			}
 		}
 		
 		writer.run(this.interpretation);
-		
 		song.add(control.getPattern());
 		
 		return song;
@@ -191,12 +190,14 @@ public class Interpreter {
 	  * 
 	  * @Param file the file file_path where it sill be saved
 	  */
-	public void interpretToMIDI(String file) {
-		try {
-            MidiFileManager.savePatternToMidi(interpretToJFuguePattern(), new File(file));
-        } catch (Exception e) {
-            e.printStackTrace();
+	public void interpretToMIDI(File filePath, int inicialBPM) {
+		
+		try (FileOutputStream fos = new FileOutputStream(filePath)){
+            MidiFileManager.savePatternToMidi(interpretToJFuguePattern(inicialBPM), fos);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
+
 	}
 	
 	 /* Returns the (@link music.Interpreter)

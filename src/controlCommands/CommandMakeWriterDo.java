@@ -7,9 +7,9 @@ import music.MusicPlayer;
 import music.songOrchestrator.WriteControl;;
 
 /**
- * {@link utilitaries.Command} to execute any method from a {@link music.songOrchestrator.Control}
+ * {@link utilitaries.Command} to execute any method from a {@link music.songOrchestrator.WriteControl}
  * 
- * @author nickyecen 
+ * @author Dantdddd 
  */
 public class CommandMakeWriterDo extends CommandWrite {
 
@@ -17,10 +17,10 @@ public class CommandMakeWriterDo extends CommandWrite {
 	private WriteControl control;
 	
 	/**
-	 * Constructs a {@link utilitaries.Command} that can execute a method of a {@link music.songOrchestrator.Control}
+	 * Constructs a {@link utilitaries.Command} that can execute a method of a {@link music.songOrchestrator.WriteControl}
 	 * 
-	 * @param control the {@link music.songOrchestrator.Control} that will execute the method
-	 * @param method the name of the {@link music.songOrchestrator.Control} that will be executed 
+	 * @param control the {@link music.songOrchestrator.WriteControl} that will execute the method
+	 * @param method the name of the {@link music.songOrchestrator.WriteControl} that will be executed 
 	 */
 	public CommandMakeWriterDo(WriteControl control, String method) {
 		super(control);
@@ -29,7 +29,7 @@ public class CommandMakeWriterDo extends CommandWrite {
 	}
 
 	/**
-	 * Executes the given method of {@link music.songOrchestrator.Control}
+	 * Executes the given method of {@link music.songOrchestrator.WriteControl}
 	 */
 
 	@Override

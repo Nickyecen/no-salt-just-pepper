@@ -287,10 +287,14 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 
 			int returnVal = this.fileChooser.showSaveDialog(this);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+            	
                 File file = this.fileChooser.getSelectedFile();
-
-                // TODO: Implementar salvamento de MIDi
+                if (!file.getName().endsWith(".mid")) {
+                	file = new File(file.getPath() + ".mid");
+                }
+                this.orchestrator.setSaveRequest(textArea.getText(), file, this.bpmRow.getNumber());
+                
             }
 		}
 		else if (MAPPING_ACTION.equals(e.getActionCommand())) {

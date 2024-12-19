@@ -1,5 +1,6 @@
 package music.songOrchestrator;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import music.Interpreter;
@@ -13,6 +14,7 @@ import stateMachine.StateMachine;
 public class Orchestrator {
 	
 	private final String DECODER_MACHINE_PATH = "src/res/decoderMachine.json";
+	private final String SAVING_ERROR_MESSAGE = "You have to pause the music to save the MIDI file!";
 	
 	private String songRequest;
 	private final Control CONTROL;
@@ -75,6 +77,16 @@ public class Orchestrator {
 		}
 	}
 
+	public void setSaveRequest(String songRequest, File filePath, int inicialBPM) {
+		this.songRequest = songRequest;
+		if(CONTROL.getStatus() == Status.STOPPED) {
+			INTERPRETER.interpretToDecoder(songRequest);
+			INTERPRETER.interpretToMIDI(filePath, inicialBPM);
+		} else {
+			System.out.println(SAVING_ERROR_MESSAGE);
+		}
+	}
+	
 	/**
 	 * Gets the {@link music.songOrchestrator.Orchestrator} being used
 	 * 

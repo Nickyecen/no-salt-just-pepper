@@ -1,7 +1,7 @@
 {
     "q0": {
-        "V": {"nextState": "q0", "command": "doNothing"},
-        "v": {"nextState": "q0", "command": "doNothing"},
+        "V": {"nextState": "q0", "command": "commandDoNothing"},
+        "v": {"nextState": "q0", "command": "commandDoNothing"},
         "O": {"nextState": "q0", "command": "raiseOctave"},
         "o": {"nextState": "q0", "command": "lowerOctave"},
         "M": {"nextState": "q0", "command": "raiseBPM"},

@@ -39,7 +39,8 @@ public class StateMachine<W extends Iterable<S>, S> {
 		this.currentState = this.initialState;
 		if(Objects.nonNull(word)) {
 			this.wordIterator = word.iterator();
-			this.currentSymbol = this.wordIterator.next();	
+			if(wordIterator.hasNext())
+				this.currentSymbol = this.wordIterator.next();	
 		}
 	}
 

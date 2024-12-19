@@ -256,12 +256,12 @@
         "R": { "nextState": "qR", "value": "" }
     },
     "qBPM": {
-        "O": {"nextState": "q0", "value": "B"},
-        "o": {"nextState": "q0", "value": "B"},
-        "I": {"nextState": "q0", "value": "B"},
-        "i": {"nextState": "q0", "value": "B"},
-        "U": {"nextState": "q0", "value": "B"},
-        "u": {"nextState": "q0", "value": "B"},
+        "O": {"nextState": "q0", "value": "BB"},
+        "o": {"nextState": "q0", "value": "BB"},
+        "I": {"nextState": "q0", "value": "BB"},
+        "i": {"nextState": "q0", "value": "BB"},
+        "U": {"nextState": "q0", "value": "BB"},
+        "u": {"nextState": "q0", "value": "BB"},
         " ": {"nextState": "q0", "value": "BR"},
         "NL": {"nextState": "q0", "value": "BI"},
         ";": {"nextState": "q0", "value": "Bm"},

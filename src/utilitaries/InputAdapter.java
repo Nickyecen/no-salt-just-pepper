@@ -1,40 +1,47 @@
 package utilitaries;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-/* This class was supposed to receive a string and an alphabet filepath;
- * I could not resolve a method to get the alphabet from an external font, 
- * like a .json file. I turned it into a constant for temporary usage.
- * 
- * When run() is called, it substitutes all the characters
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * This class receives a string and alphabet and when run() 
+ * is called, it substitutes all the characters
  * that are not included in the alphabet with 'X';
  */
-
 public class InputAdapter {
 	
-	private static final List<Character> ALPHABET = List.of(
-	        'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g',
-	        ' ', '\n', '+', '-', 'I', 'i', 'O', 'o', 'U', 'u', 'R', '?', 'P', 'M', ';'
-	    ); 
 	
 	private String input;
 	private String output;
-	private ArrayList<Character> alphabet;
+	private Set<String> alphabet; 
 	
-	// Builder which receives the initial string and alphabet filePath
+	/**
+	 * Builder which receives the initial string and alphabet filePath
+	 * 
+	 * @param input string for {@link utilitaries.InputAdapter} {@link input}
+	 */
 	public InputAdapter(String input) {
 		this.input = input;
-		this.alphabet = new ArrayList<>(ALPHABET);
+		this.alphabet = loadAlphabet();
 	}
 	
-	// Rewrites the input string so that all characters that are 
-	// not included in the alphabet are rewritten as 'X'
+	/**
+	 * Rewrites the {@link input} string so that all characters that are 
+	 * not included in the alphabet are rewritten as 'X' in the {@link output}
+	 */
 	public void run() {
 		StringBuilder adaptedInput = new StringBuilder();
 		
 		for (char c : input.toCharArray()) {
-            if (this.alphabet.contains(c)) {
+            if (this.alphabet.contains(String.valueOf(c))) {
             	adaptedInput.append(c);
             } else {
             	adaptedInput.append('X');
@@ -43,7 +50,39 @@ public class InputAdapter {
 
 		this.output = adaptedInput.toString();
 	}
+	
+	/**
+	 * Loads the {@link alphabet} from a json file
+	 */
+	public Set<String> loadAlphabet() {
+		Set<String> alphabet = new HashSet<String>();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		File fileObj = new File("src/res/decoderMachine.json");
+		HashMap<String, HashMap<String, HashMap<String, String>>> data = null;
+		try {
+			
+			data = mapper.readValue(fileObj, new TypeReference<HashMap<String, HashMap<String, HashMap<String, String>>>>() {});
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}	
+	
+		for(Map.Entry<String, HashMap<String, HashMap<String, String>>> entry : data.entrySet()) {
+			for(Map.Entry<String, HashMap<String, String>> symbolEntry : entry.getValue().entrySet()) {
+				alphabet.add(symbolEntry.getKey());
+			}
+		}
+		
+		return alphabet;
+		
+	}
 
+  /**
+	 * Gets the {@link output} of the {@link utilitaries.InputAdapter}
+	 *
+	 * @return the current {@link utilitaries.InputAdapter} {@link output}
+	 */
 	public String getOutput() {
 		return this.output;
 	}
