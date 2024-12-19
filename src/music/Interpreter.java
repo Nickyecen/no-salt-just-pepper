@@ -35,7 +35,6 @@ public class Interpreter {
 	final private static String FILE_PATH = "src/res/patternMachine.json";
 	
 	private StateMachine<ArrayList<String>, String> decoderMachine;
-	private static StringBuilder interpretationString = new StringBuilder();
 	private ArrayList<String> interpretation = new ArrayList<String>();	
 	
 	private Interpreter(State<String> state) {
@@ -77,7 +76,7 @@ public class Interpreter {
 				String value = symbolReference.getValue().get("value");
 				
 				State<String> nextState = stateMap.get(nextStateName);
-				CommandAddToString command = new CommandAddToString(interpretationString, value);
+				CommandAddToList command = new CommandAddToList(interpreter.interpretation, value);
 				state.addTransition(symbol, MealyTransition.to(nextState).doing(command));
 				
 			}
@@ -102,6 +101,7 @@ public class Interpreter {
 	 * parameter of (@link utilitaries.MealyMachine}
 	 */
 	public void interpretToDecoder(String word) {
+		reset();
 
 		InputAdapter inputAdapter = new InputAdapter(word);
 		inputAdapter.run();
@@ -122,12 +122,12 @@ public class Interpreter {
 		}
 		
 		this.decoderMachine.run(parsedWord);
-		
-		// Build interpretation array list
-		CommandAddToList command = new CommandAddToList(this.interpretation, "");
-		for (int i = 0; i < interpretationString.toString().length(); i++) {
-			command.setValue(String.valueOf(interpretationString.charAt(i)));
-			command.execute();
+		ArrayList<String> parsedInterpretation = new ArrayList<String>(interpretation);
+		interpretation.clear();
+		for(String value : parsedInterpretation) {
+			for(char symbol : value.toCharArray()) {
+				interpretation.add(String.valueOf(symbol));
+			}	
 		}
 	}
 	
@@ -137,7 +137,7 @@ public class Interpreter {
 	 * 
 	 * @return Pattern JFugue pattern of the song to be played
 	 */
-public Pattern interpretToJFuguePattern() {
+	public Pattern interpretToJFuguePattern() {
 		
 		Pattern song = new Pattern();
 		WriteControl control = new WriteControl();
