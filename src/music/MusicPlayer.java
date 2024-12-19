@@ -11,13 +11,13 @@ import org.jfugue.realtime.RealtimePlayer;
  */
 public class MusicPlayer {
 
-	public static final int MAX_VOLUME = 127; // TODO: Replace with actual max value
-	public static final int MIN_VOLUME = 0; // TODO: Replace with actual min value
-	public static final int DEFAULT_VOLUME = 10; // TODO: Replace with actual default value
+	public static final int MAX_VOLUME = 127;
+	public static final int MIN_VOLUME = 0;
+	public static final int DEFAULT_VOLUME = (MAX_VOLUME - MIN_VOLUME) / 2;
 
 	public static final int MAX_OCTAVE = 10;
 	public static final int MIN_OCTAVE = 0;
-	public static final int DEFAULT_OCTAVE = 0;
+	public static final int DEFAULT_OCTAVE = 5;
 
 	public static final Instrument DEFAULT_INSTRUMENT = Instrument.ACOUSTIC_GRAND_PIANO;
 
@@ -35,6 +35,7 @@ public class MusicPlayer {
 
 	private NoteListener noteListener;
 	private InstrumentListener instrumentListener;
+	private VolumeListener volumeListener;
 
 	public void setNoteListener(NoteListener listener) {
 		this.noteListener = listener;
@@ -55,6 +56,17 @@ public class MusicPlayer {
 		if (instrumentListener != null) {
 			InstrumentEvent event = new InstrumentEvent(this, instrument);
 			instrumentListener.onInstrumentEvent(event);
+		}
+	}
+
+	public void setVolumeListener(VolumeListener listener) {
+		this.volumeListener = listener;
+	}
+
+	public void notifyVolumeListener(int volume) {
+		if (volumeListener != null) {
+			VolumeEvent event = new VolumeEvent(this, volume);
+			volumeListener.onVolumeEvent(event);
 		}
 	}
 
@@ -261,7 +273,7 @@ public class MusicPlayer {
 			this.volume = volume;
 		}
 
-		System.out.println("Volume " + this.volume);
+		notifyVolumeListener(this.volume);
 		player.changeController((byte) 7, (byte) this.volume);
 	}
 

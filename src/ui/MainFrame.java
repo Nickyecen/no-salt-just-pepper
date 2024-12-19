@@ -32,13 +32,16 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import music.InstrumentEvent;
 import music.InstrumentListener;
+import music.MusicPlayer;
 import music.NoteEvent;
 import music.NoteListener;
+import music.VolumeEvent;
+import music.VolumeListener;
 import music.songOrchestrator.Control;
 import music.songOrchestrator.Orchestrator;
 
 @SuppressWarnings("serial")
-public class MainFrame extends JFrame implements ActionListener, ChangeListener, ItemListener, NoteListener, InstrumentListener {
+public class MainFrame extends JFrame implements ActionListener, ChangeListener, ItemListener, NoteListener, InstrumentListener, VolumeListener {
 
 	final private String WINDOW_TITLE = "No Salt Just Pepper";
 	final private int DEFAULT_WINDOW_WIDTH = 800;
@@ -67,6 +70,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	final private String BPM_LABEL = "BPM:";
 	final private String INSTRUMENT_LABEL = "Current Instrument:";
 	final private String NOTE_LABEL = "Current Note:";
+	final private String VOLUME_LABEL = "Current Volume:";
 	final private String NO_INFO = " - ";
 
 	final private String FILE_MENU_LABEL = "File";
@@ -102,6 +106,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	private SpinnerRow bpmRow;
 	private TextRow instrumentRow;
 	private TextRow noteRow;
+	private BarRow volumeRow;
 
 	private ImageIcon logoIcon;
 	private ImageIcon playIcon;
@@ -138,7 +143,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 1;
-		c.gridheight = 3;
+		c.gridheight = 4;
 		c.weighty = 0.0;
 		c.weightx = 0.0;
 		c.anchor = GridBagConstraints.BASELINE;
@@ -155,7 +160,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridx = 1;
 		c.gridy = 1;
 		c.gridwidth = 1;
-		c.gridheight = 3;
+		c.gridheight = 4;
 		c.weighty = 0.0;
 		c.weightx = 0.0;
 		c.anchor = GridBagConstraints.BASELINE;
@@ -175,8 +180,8 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridheight = 1;
 		c.weighty = 0.0;
 		c.weightx = 1.0;
-		c.anchor = GridBagConstraints.BASELINE;
-		c.fill = GridBagConstraints.BOTH;
+		c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(0, 10, 10, 10);
 
 		return c;
@@ -192,9 +197,9 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridheight = 1;
 		c.weighty = 0.0;
 		c.weightx = 1.0;
-		c.anchor = GridBagConstraints.EAST;
-		c.fill = GridBagConstraints.BOTH;
-		c.insets = new Insets(0, 10, 10, 10);
+		c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(0, 10, 15, 10);
 
 		return c;
 	}
@@ -209,8 +214,25 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		c.gridheight = 1;
 		c.weighty = 0.0;
 		c.weightx = 1.0;
-		c.anchor = GridBagConstraints.WEST;
-		c.fill = GridBagConstraints.BOTH;
+		c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(0, 10, 10, 10);
+
+		return c;
+	}
+
+	private GridBagConstraints volumeBarConstraints() {
+
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.gridx = 2;
+		c.gridy = 4;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.weighty = 0.0;
+		c.weightx = 1.0;
+		c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(0, 10, 10, 10);
 
 		return c;
@@ -304,6 +326,13 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 	@Override
 	public void onInstrumentEvent(InstrumentEvent event) {
 		this.instrumentRow.setInfo(event.getInstrument());
+
+	}
+
+
+	@Override
+	public void onVolumeEvent(VolumeEvent event) {
+		this.volumeRow.setValue(event.getVolume());
 
 	}
 
@@ -434,6 +463,10 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
 		add(this.noteRow, noteRowConstraints());
 		orchestrator.getControl().getMusicPlayer().setNoteListener(this);
 
+		this.volumeRow = new BarRow(VOLUME_LABEL, MusicPlayer.MIN_VOLUME, MusicPlayer.MAX_VOLUME, MusicPlayer.DEFAULT_VOLUME);
+		add(this.volumeRow, volumeBarConstraints());
+		orchestrator.getControl().getMusicPlayer().setVolumeListener(this);
+
 		String[] columnNames = {"Text", "Action"};
 
 		File mappingFile = new File("src/res/mapping_description_table.json");
@@ -450,6 +483,5 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener,
             e1.printStackTrace();
         }
 	}
-
 
 }
