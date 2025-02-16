@@ -1,11 +1,15 @@
-# No Salt Just Pepper
+<div align="center">
+  <img src="/src/res/logo_icon.png" width=128>
 
-Um gerador de música por texto modular em Java
+  # No Salt Just Pepper
 
-Trabalho prático desenvolvido na disciplina de Técnicas de Construção de Programas no semestre 2024/2
+  Um gerador de música por texto modular em Java
 
-![Dark theme screenshot](screenshots/light.png)
-![Light theme Screenshot](screenshots/dark.png)
+  ![Dark theme screenshot](screenshots/light.png)
+  ![Light theme Screenshot](screenshots/dark.png)
+
+  Trabalho prático desenvolvido na disciplina Técnicas de Construção de Programas no semestre 2024/2
+</div>
 
 ## Bibliotecas usadas
 
